@@ -1,0 +1,3 @@
+include ':DFCamera'
+include ':app'
+rootProject.name = "DFCameraDemo"
