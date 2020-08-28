@@ -18,6 +18,7 @@
         <attr name="mode" format="enum">
             <enum name="image" value="0"/>
             <enum name="video" value="1"/>
+            <enum name="grid" value="1"/>
         </attr>
         <attr name="pinchToZoom" format="boolean"/>
         <attr name="showFocusIndicator" format="boolean"/>

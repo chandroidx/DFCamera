@@ -159,7 +159,7 @@ public class PhotographerActivity extends AppCompatActivity {
             if (videoSizes != null && videoSizes.size() > 0) {
                 supportedSizes = Commons.wrapItems(videoSizes, SizeItem::new);
             }
-        } else if (mode == Values.MODE_IMAGE) {
+        } else if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
             Set<Size> imageSizes = photographer.getSupportedImageSizes();
             selectedSize = photographer.getImageSize();
             if (imageSizes != null && imageSizes.size() > 0) {
@@ -190,13 +190,13 @@ public class PhotographerActivity extends AppCompatActivity {
 
     @OnCheckedChanged(R.id.fillSpace)
     void onFillSpaceChecked(boolean checked) {
-        preview.setGrid(Grid.DRAW_5X3);
+        preview.setFocusGrid(Grid.DRAW_5X3);
     }
 
     @OnCheckedChanged(R.id.enableZoom)
     void onEnableZoomChecked(boolean checked) {
 //        preview.setPinchToZoom(checked);
-        preview.setGridMode(true);
+        photographerHelper.switchMode(Values.MODE_GRID);
     }
 
     @OnClick(R.id.flash)
@@ -218,7 +218,7 @@ public class PhotographerActivity extends AppCompatActivity {
                 photographer.startRecording(null);
                 actionButton.setEnabled(false);
             }
-        } else if (mode == Values.MODE_IMAGE) {
+        } else if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
             photographer.takePicture();
         }
     }
@@ -239,7 +239,12 @@ public class PhotographerActivity extends AppCompatActivity {
 
     @OnClick(R.id.switch_mode)
     void switchMode() {
-        photographerHelper.switchMode();
+        if (photographer.getMode() == Values.MODE_IMAGE) {
+            photographerHelper.switchMode(Values.MODE_VIDEO);
+        } else {
+            photographerHelper.switchMode(Values.MODE_IMAGE);
+        }
+
     }
 
     @OnClick(R.id.flip)

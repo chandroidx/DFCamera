@@ -75,6 +75,13 @@ class Camera2Photographer : InternalPhotographer {
     override var mode: Int
         get() = _mode
     set(mode) {
+        if (_mode == mode) return
+        if (_mode != Values.MODE_VIDEO && mode != Values.MODE_VIDEO) {
+            preview?.gridModeLine = mode == Values.MODE_GRID
+            _mode = mode
+            return
+        }
+
         _mode = mode
         restartPreview()
     }
@@ -640,12 +647,12 @@ class Camera2Photographer : InternalPhotographer {
     }
 
     /**
-     * 아용가능한 사이즈 정보 가져오기
+     * 아용가능한 사이즈 정보 가져오기 등 사전 작업
      */
     private fun prepareWorkers() {
         val size: Size?
         when(mode) {
-            Values.MODE_IMAGE -> {
+            Values.MODE_IMAGE, Values.MODE_GRID -> {
                 if (imageSize == null) {
                     // determine image size
                     val sizesWithAspectRatio: SortedSet<Size>? =
@@ -697,6 +704,8 @@ class Camera2Photographer : InternalPhotographer {
         } else {
             textureView!!.setAspectRatio(previewSize!!.height, previewSize!!.width)
         }
+
+        preview?.gridModeLine = mode == Values.MODE_GRID
     }
 
 
@@ -793,6 +802,8 @@ class Camera2Photographer : InternalPhotographer {
                     .contains(ratio)
                 || mode == Values.MODE_IMAGE && !imageSizeMap.ratios()
                     .contains(ratio)
+                || mode == Values.MODE_GRID && !imageSizeMap.ratios()
+                    .contains(ratio)
             ) {
                 if (previewSizeMap.sizes(ratio) != null) {
                     supportedPreviewSizes.removeAll(previewSizeMap.sizes(ratio)!!)
@@ -875,7 +886,7 @@ class Camera2Photographer : InternalPhotographer {
      * 프리뷰 및 CaptureSession 생성
      */
     private fun startCaptureSession() {
-        if (camera == null || textureView!!.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null
+        if (camera == null || textureView!!.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null || mode == Values.MODE_GRID && imageReader == null
         ) {
             return
         }
@@ -890,7 +901,7 @@ class Camera2Photographer : InternalPhotographer {
             val surfaces: MutableList<Surface?> =
                 ArrayList()
             surfaces.add(previewSurface)
-            if (mode == Values.MODE_IMAGE) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
                 surfaces.add(imageReader!!.surface)
             }
             camera!!.createCaptureSession(surfaces, sessionCallback, null)
@@ -938,7 +949,7 @@ class Camera2Photographer : InternalPhotographer {
             )
         } else {
             // 이미지 / 비디오 오토 포커스
-            if (mode == Values.MODE_IMAGE) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
                 previewRequestBuilder!!.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
@@ -1079,7 +1090,7 @@ class Camera2Photographer : InternalPhotographer {
      * 사진 촬영
      */
     override fun takePicture() {
-        if (mode != Values.MODE_IMAGE) {
+        if (mode == Values.MODE_VIDEO) {
             callbackHandler!!.onError(
                 Error(
                     Error.ERROR_INVALID_PARAM,
@@ -1343,7 +1354,7 @@ class Camera2Photographer : InternalPhotographer {
             }
 
             // 그리드 모드에서는 비트맵 변환이 필요하기에, ImageSaver에서 로테이션 처리 진행.
-            if (!(preview!!.gridMode)) {
+            if (mode != Values.MODE_GRID) {
                 captureRequestBuilder.set(
                     CaptureRequest.JPEG_ORIENTATION,
                     Utils.getOrientation(
@@ -1358,7 +1369,6 @@ class Camera2Photographer : InternalPhotographer {
                 calculateZoomRect()
             )
 
-            //TODO: - Mephrine. 노출 조절 부분 확인
             captureSession!!.stopRepeating()
             captureSession!!.capture(
                 captureRequestBuilder.build(),
@@ -1549,7 +1559,7 @@ class Camera2Photographer : InternalPhotographer {
             return
         }
         try {
-            if (mode == Values.MODE_IMAGE) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
                 captureSession!!.setRepeatingRequest(
                     previewRequestBuilder!!.build(),
                     imageCaptureCallback,
@@ -1579,7 +1589,7 @@ class Camera2Photographer : InternalPhotographer {
      * @return Rect?
      */
     private fun captureShowHideLineGridMode(show: Boolean) : GridModeView? {
-        if (!(preview!!.gridMode)) return null
+        if (mode != Values.MODE_GRID) return null
         preview?.gridModeViewOrNull?.let {
             when(show) {
                 true -> {

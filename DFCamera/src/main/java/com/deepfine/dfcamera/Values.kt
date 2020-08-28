@@ -7,6 +7,7 @@ interface Values {
             AspectRatio.of(4, 3)
         const val MODE_IMAGE = 0
         const val MODE_VIDEO = 1
+        const val MODE_GRID = 2
         const val FLASH_OFF = 0
         const val FLASH_ON = 1
         const val FLASH_TORCH = 2

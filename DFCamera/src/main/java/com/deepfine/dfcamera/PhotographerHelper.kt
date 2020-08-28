@@ -1,10 +1,9 @@
 package com.deepfine.camera
 
 class PhotographerHelper(private val photographer: Photographer) {
-    fun switchMode() {
-        val newMode: Int =
-            if (photographer.mode == Values.MODE_IMAGE) Values.MODE_VIDEO else Values.MODE_IMAGE
-        photographer.mode = newMode
+    fun switchMode(mode: Int? = Values.MODE_IMAGE) {
+        if (photographer.mode == mode) { return }
+        photographer.mode = mode!!
     }
 
     fun flip() {

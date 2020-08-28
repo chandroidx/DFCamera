@@ -34,7 +34,6 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private val isSmartGlasses: Boolean
     private val exposure: Float
     private var grid: Int
-    private var modeGrid: Boolean
     private var gridLayout: GridLinesLayout? = null
     private var focusGridView: FocusGridView? = null
     private var gridModeView: GridModeView? = null
@@ -86,7 +85,8 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             textureView.fillSpace = fillSpace
         }
 
-    var isGrid: Grid
+    // 스마트글래스에서 포커스 줄 때 그려지는 Grid
+    var focusGrid: Grid
     get() = Grid.indexToCase(grid)
     set (value){
         grid = value.index
@@ -98,10 +98,12 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         }
     }
 
-    var gridMode: Boolean
-    get() = modeGrid
+    // 그리드모드를 선택했을 경우의 뷰의 유무
+    private var _gridModeLine: Boolean = false
+    internal var gridModeLine: Boolean
+    get() = _gridModeLine
     set(value) {
-        modeGrid = value
+        _gridModeLine = value
         gridModeView?.apply {
             this.gridMode = if (value) Grid.DRAW_5X3 else Grid.OFF
         }
@@ -110,7 +112,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
 
     var gridModeViewOrNull: GridModeView? = null
         get() {
-            return if (gridMode) gridModeView!! else null
+            return if (gridModeLine) gridModeView!! else null
         }
 
 
@@ -206,11 +208,6 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         grid = typedArray.getInt(
             R.styleable.CameraView_grid,
             Values.GRID_OFF
-        )
-
-        modeGrid = typedArray.getBoolean(
-            R.styleable.CameraView_modeGrid,
-            false
         )
 
         exposure = typedArray.getFloat(
