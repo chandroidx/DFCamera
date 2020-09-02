@@ -41,7 +41,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var gridBgColor: Int? = null
     private var gridTextColor: Int? = null
     private var gridText: String? = null
-    private var gridTextSize: Float? = null
+    private var gridTextSize: Int? = null
     private var gridModeMarginTopBottom: Float? = null
     private var gridModeDimColor: Int? = null
 
@@ -238,9 +238,9 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             R.styleable.CameraView_gridModeText
         )
 
-        gridTextSize = typedArray.getFloat(
+        gridTextSize = typedArray.getDimensionPixelSize(
             R.styleable.CameraView_gridModeTextSize,
-            Utils.dpToPixel(context, 13f)
+            20
         )
 
         gridModeMarginTopBottom = typedArray.getFloat(

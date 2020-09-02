@@ -36,7 +36,7 @@
         <attr name="gridModeBgColor" format="color"/>
         <attr name="gridModeTextColor" format="color"/>
         <attr name="gridModeText" format="string"/>
-        <attr name="gridModeTextSize" format="float"/>
+        <attr name="gridModeTextSize" format="dimension"/>
         <attr name="gridModeMarginTopBottom" format="float"/>
         <attr name="gridModeDimColor" format="color"/>
     </declare-styleable>

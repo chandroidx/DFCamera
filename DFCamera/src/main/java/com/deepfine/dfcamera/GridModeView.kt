@@ -20,7 +20,7 @@ class GridModeView @JvmOverloads constructor(
     val bgColor: Int? = null,
     val textColor: Int? = null,
     val text: String? = null,
-    val textSize: Float? = null,
+    val textSize: Int? = null,
     val marginTopBottom: Float? = 40f,
     val dimColor: Int? = 0xAB000000.toInt()
 ) : LinearLayout(context, attrs) {
@@ -178,9 +178,9 @@ class GridModeView @JvmOverloads constructor(
                                 }
                             }
                         }
-                        textView.textSize = textSize ?: Utils.dpToPixel(
+                        textView.textSize = textSize?.toFloat() ?: Utils.dpToPixel(
                             context,
-                            13f
+                            30f
                         )
                         textView.id = View.generateViewId()
                         hiddenViewList.add(textView.id)
