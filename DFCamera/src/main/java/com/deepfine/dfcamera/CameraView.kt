@@ -155,6 +155,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     interface Callback : AutoFitTextureView.Callback {
         fun onSingleTap(x: Int, y: Int)
         fun onScale(scaleFactor: Float)
+        fun onSelected(selected: MutableList<Int>)
     }
 
     private val callbacks: MutableList<Callback> =
@@ -334,6 +335,9 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             GridModeView.TouchCallback {
             override fun onSelected(selected: MutableList<Int>) {
                 selectedGrid = selected
+                for (callback in callbacks) {
+                    callback.onSelected(selected)
+                }
             }
         }
 

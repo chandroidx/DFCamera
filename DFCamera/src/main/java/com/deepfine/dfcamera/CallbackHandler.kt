@@ -32,6 +32,9 @@ internal class CallbackHandler(context: Context?): Handler(context!!.mainLooper)
             CALLBACK_ON_SHOT_FINISHED -> onEventListener!!.onShotFinished(
                 msg.obj as String
             )
+            CALLBACK_ON_SELECTED_GRID_COUNT -> onEventListener!!.onSelectedGridCount(
+                msg.obj as Int
+            )
             CALLBACK_ON_ERROR -> onEventListener!!.onError(
                 msg.obj as Error
             )
@@ -116,6 +119,18 @@ internal class CallbackHandler(context: Context?): Handler(context!!.mainLooper)
     }
 
     /**
+     * 선택된 그리드 카운트 callbaCk
+     * @param filePath
+     */
+    fun onSelectedGridCount(count: Int?) {
+        Message.obtain(
+            this,
+            CALLBACK_ON_SELECTED_GRID_COUNT,
+            count
+        ).sendToTarget()
+    }
+
+    /**
      * 에러 전달 callbaCk
      * @param error
      */
@@ -135,6 +150,7 @@ internal class CallbackHandler(context: Context?): Handler(context!!.mainLooper)
         private const val CALLBACK_ON_START_RECORDING = 5
         private const val CALLBACK_ON_FINISH_RECORDING = 6
         private const val CALLBACK_ON_SHOT_FINISHED = 7
+        private const val CALLBACK_ON_SELECTED_GRID_COUNT = 8
         private const val CALLBACK_ON_ERROR = 9
 
     }

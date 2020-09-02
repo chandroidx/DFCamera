@@ -9,5 +9,6 @@ open class SimpleOnEventListener :
     override fun onStartRecording() {}
     override fun onFinishRecording(filePath: String?) {}
     override fun onShotFinished(filePath: String?) {}
+    override fun onSelectedGridCount(count: Int) {}
     override fun onError(error: Error?) {}
 }

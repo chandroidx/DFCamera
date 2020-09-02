@@ -416,6 +416,10 @@ class Camera2Photographer : InternalPhotographer {
             override fun onSurfaceChanged() {
                 startCaptureSession()
             }
+
+            override fun onSelected(selected: MutableList<Int>) {
+                callbackHandler?.onSelectedGridCount(selected.count())
+            }
         })
 
         // 회전 전환 리스너

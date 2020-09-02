@@ -350,6 +350,11 @@ public class PhotographerActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onSelectedGridCount(int count) {
+
+            }
+
+            @Override
             public void onError(Error error) {
                 Log.e("Error happens: %s", error.getMessage());
             }

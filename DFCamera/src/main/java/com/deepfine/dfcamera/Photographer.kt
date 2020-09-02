@@ -78,6 +78,7 @@ interface Photographer {
         fun onStartRecording()
         fun onFinishRecording(filePath: String?)
         fun onShotFinished(filePath: String?)
+        fun onSelectedGridCount(count: Int)
         fun onError(error: Error?)
     }
 }
