@@ -3,6 +3,7 @@ package com.deepfine.camera
 import android.R
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -21,7 +22,7 @@ class GridModeView @JvmOverloads constructor(
     val textColor: Int? = null,
     val text: String? = null,
     val textSize: Int? = null,
-    val marginTopBottom: Float? = 40f,
+    val marginTopBottom: Int? = 40,
     val dimColor: Int? = 0xAB000000.toInt()
 ) : LinearLayout(context, attrs) {
     private var _gridMode: Grid = Grid.OFF
@@ -168,10 +169,11 @@ class GridModeView @JvmOverloads constructor(
                                 }
                             }
                         }
-                        textView.textSize = textSize?.toFloat() ?: Utils.dpToPixel(
+                        textView.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX, textSize?.toFloat() ?: Utils.dpToPixel(
                             context,
                             30f
-                        )
+                        ))
                         textView.id = View.generateViewId()
                         hiddenViewList.add(textView.id)
 

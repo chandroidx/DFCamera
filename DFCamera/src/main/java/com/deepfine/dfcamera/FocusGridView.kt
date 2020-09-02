@@ -8,6 +8,7 @@ import androidx.annotation.Nullable
 
 import android.R
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.FrameLayout
@@ -30,7 +31,7 @@ class FocusGridView @JvmOverloads constructor(
     val textColor: Int? = null,
     val text: String? = null,
     val textSize: Int? = null,
-    val marginTopBottom: Float? = 40f,
+    val marginTopBottom: Int? = 40,
     val dimColor: Int? = 0xAB000000.toInt()
 ) : LinearLayout(context, attrs) {
     private var _gridMode: Grid =
@@ -153,21 +154,24 @@ class FocusGridView @JvmOverloads constructor(
                                 callback?.let {
                                     val location = IntArray(2)
                                     view.getLocationOnScreen(location)
-                                    val locX = view.x;
-                                    val locX2 = view.pivotX;
-                                    val locX4 = view.width;
 
-                                    val x = location[0] + view.width + (marginTopBottom/2)
-                                    val y = location[1] + (view.height / 2)
+                                    val x = location[0] + (view.width / 2)
+                                    val y = location[1] + view.height + (marginTopBottom / 2)
 
                                     it.onTouch(x.toInt(), y.toInt())
                                 }
                             }
                         }
-                        textView.textSize = textSize?.toFloat() ?: Utils.dpToPixel(
-                            context,
-                            30f
-                        )
+
+
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize?.toFloat() ?: Utils.dpToPixel(
+                        context,
+                        30f
+                        ))
+//                            TypedValue.COMPLEX_UNIT_PX, textSize?.toFloat() ?: Utils.dpToPixel(
+//                        context,
+//                        30f
+//                        )
                         textView.id = View.generateViewId()
 
                         row.addView(textView)

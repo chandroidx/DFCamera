@@ -37,7 +37,7 @@
         <attr name="gridModeTextColor" format="color"/>
         <attr name="gridModeText" format="string"/>
         <attr name="gridModeTextSize" format="dimension"/>
-        <attr name="gridModeMarginTopBottom" format="float"/>
+        <attr name="gridModeMarginTopBottom" format="dimension"/>
         <attr name="gridModeDimColor" format="color"/>
     </declare-styleable>
     <item name="textureView" type="id"/>

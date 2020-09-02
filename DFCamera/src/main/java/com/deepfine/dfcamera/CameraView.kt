@@ -3,7 +3,7 @@ package com.deepfine.camera
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
@@ -42,7 +42,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var gridTextColor: Int? = null
     private var gridText: String? = null
     private var gridTextSize: Int? = null
-    private var gridModeMarginTopBottom: Float? = null
+    private var gridModeMarginTopBottom: Int? = null
     private var gridModeDimColor: Int? = null
 
     @JvmOverloads
@@ -240,13 +240,23 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
 
         gridTextSize = typedArray.getDimensionPixelSize(
             R.styleable.CameraView_gridModeTextSize,
-            20
+            Utils.dpToPixel(context, 30f).toInt()
         )
 
-        gridModeMarginTopBottom = typedArray.getFloat(
-            R.styleable.CameraView_gridModeMarginTopBottom,
-            40f
-        )
+
+        gridModeMarginTopBottom = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            typedArray.getDimensionPixelSize(R.styleable.CameraView_gridModeMarginTopBottom, Utils.dpToPixel(context, 40f).toInt())
+                .toFloat(),
+            resources.displayMetrics
+        ).toInt()
+
+//            typedArray.getDimensionPixelSize(
+//            R.styleable.CameraView_gridModeMarginTopBottom,
+//            Utils.dpToPixel(context, 40f).toInt()
+//        )
+
+
 
         gridModeDimColor = typedArray.getColor(
             R.styleable.CameraView_gridModeDimColor,
