@@ -19,6 +19,6 @@ interface Values {
         const val GRID_OFF = 0
         const val GRID_3X3 = 1
         const val GRID_4X4 = 2
-        const val GRID_PHI = 3
+        const val GRID_5X3 = 3
     }
 }

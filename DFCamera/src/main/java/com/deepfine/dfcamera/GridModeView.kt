@@ -66,16 +66,6 @@ class GridModeView @JvmOverloads constructor(
         hiddenViewList.clear()
 
         if (lineCount > 1) {
-            // container 초기 세팅
-//            if (!::container.isInitialized) {
-//                container = LinearLayout(context)
-//            }
-//        else {
-//            children.firstOrNull { it.id == container.id }?.let {
-//                this.removeView(it)
-//            }
-//        }
-
             // 배경 상단 뷰
             val blankTop: View = View(context).also {
                 it.id = View.generateViewId()

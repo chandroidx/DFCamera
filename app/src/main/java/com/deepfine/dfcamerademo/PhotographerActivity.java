@@ -190,7 +190,7 @@ public class PhotographerActivity extends AppCompatActivity {
 
     @OnCheckedChanged(R.id.fillSpace)
     void onFillSpaceChecked(boolean checked) {
-        preview.setFocusGrid(Grid.DRAW_5X3);
+        preview.setFocusGrid(Grid.DRAW_3X3);
     }
 
     @OnCheckedChanged(R.id.enableZoom)

@@ -265,7 +265,15 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         when (isSmartGlasses) {
             true -> {
                 // 포커
-                focusGridView = FocusGridView(context, null)
+                focusGridView = FocusGridView(context,
+                    null,
+                        gridLineColor,
+                        gridBgColor,
+                        gridTextColor,
+                        gridText,
+                        gridTextSize,
+                        gridModeMarginTopBottom,
+                        gridModeDimColor)
                 val gridViewParams = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
