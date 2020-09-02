@@ -81,6 +81,7 @@ class Camera2Photographer : InternalPhotographer {
         if (_mode != Values.MODE_VIDEO && mode != Values.MODE_VIDEO) {
             preview?.gridModeLine = mode == Values.MODE_GRID
             _mode = mode
+            callbackHandler?.onDeviceConfigured()
             return
         }
 
