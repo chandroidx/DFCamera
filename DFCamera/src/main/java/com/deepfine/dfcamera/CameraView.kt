@@ -60,7 +60,6 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         photographer.autoFocus = autoFocus
         photographer.facing = facing
         photographer.flash = flash
-        photographer.grid = grid
         photographer.isSmartGlasses = isSmartGlasses
         photographer.exposure = exposure
     }
