@@ -76,6 +76,8 @@ class Camera2Photographer : InternalPhotographer {
         get() = _mode
     set(mode) {
         if (_mode == mode) return
+
+        preview?.focusGrid = Grid.OFF
         if (_mode != Values.MODE_VIDEO && mode != Values.MODE_VIDEO) {
             preview?.gridModeLine = mode == Values.MODE_GRID
             _mode = mode
@@ -148,8 +150,6 @@ class Camera2Photographer : InternalPhotographer {
                 updatePreview(Runnable { this.flash = saved })
             }
         }
-
-    override var grid: Int = Grid.OFF.index
 
     var _exposure: Float = 50.0f
     override var exposure: Float
@@ -652,7 +652,7 @@ class Camera2Photographer : InternalPhotographer {
     private fun prepareWorkers() {
         val size: Size?
         when(mode) {
-            Values.MODE_IMAGE, Values.MODE_GRID -> {
+            Values.MODE_IMAGE, Values.MODE_GRID, Values.MODE_SCAN -> {
                 if (imageSize == null) {
                     // determine image size
                     val sizesWithAspectRatio: SortedSet<Size>? =
@@ -804,6 +804,7 @@ class Camera2Photographer : InternalPhotographer {
                     .contains(ratio)
                 || mode == Values.MODE_GRID && !imageSizeMap.ratios()
                     .contains(ratio)
+                || mode == Values.MODE_SCAN && !imageSizeMap.ratios().contains(ratio)
             ) {
                 if (previewSizeMap.sizes(ratio) != null) {
                     supportedPreviewSizes.removeAll(previewSizeMap.sizes(ratio)!!)
@@ -886,8 +887,7 @@ class Camera2Photographer : InternalPhotographer {
      * 프리뷰 및 CaptureSession 생성
      */
     private fun startCaptureSession() {
-        if (camera == null || textureView!!.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null || mode == Values.MODE_GRID && imageReader == null
-        ) {
+        if (camera == null || textureView!!.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null || mode == Values.MODE_GRID && imageReader == null || mode == Values.MODE_SCAN && imageReader == null) {
             return
         }
         try {
@@ -901,7 +901,7 @@ class Camera2Photographer : InternalPhotographer {
             val surfaces: MutableList<Surface?> =
                 ArrayList()
             surfaces.add(previewSurface)
-            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
                 surfaces.add(imageReader!!.surface)
             }
             camera!!.createCaptureSession(surfaces, sessionCallback, null)
@@ -949,7 +949,7 @@ class Camera2Photographer : InternalPhotographer {
             )
         } else {
             // 이미지 / 비디오 오토 포커스
-            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
                 previewRequestBuilder!!.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
@@ -1163,6 +1163,7 @@ class Camera2Photographer : InternalPhotographer {
             previewRequestBuilder!!.addTarget(recorderSurface)
             // Start a capture session
             // Once the session starts, we can update the UI and start recording
+
             camera!!.createCaptureSession(surfaces, object : CameraCaptureSession.StateCallback() {
                 override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
                     captureSession = cameraCaptureSession
@@ -1559,7 +1560,7 @@ class Camera2Photographer : InternalPhotographer {
             return
         }
         try {
-            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID) {
+            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
                 captureSession!!.setRepeatingRequest(
                     previewRequestBuilder!!.build(),
                     imageCaptureCallback,

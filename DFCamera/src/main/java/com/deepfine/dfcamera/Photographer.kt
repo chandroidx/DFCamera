@@ -18,7 +18,6 @@ interface Photographer {
     var flash: Int
     var zoom: Float
     var mode: Int
-    var grid: Int
     var exposure: Float
     var isSmartGlasses: Boolean
     fun takePicture()
