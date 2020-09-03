@@ -98,7 +98,7 @@ class Camera2Photographer : InternalPhotographer {
             return
         }
         if (ratio == null || !previewSizeMap.ratios().contains(ratio)) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_INVALID_PARAM,
                     ratio.toString() + " not supported."
@@ -125,7 +125,7 @@ class Camera2Photographer : InternalPhotographer {
 
         if (previewRequestBuilder != null) {
             updateAutoFocus()
-            updatePreview(Runnable { this.autoFocus = !this.autoFocus })
+            updatePreview(Runnable { _autoFocus = !_autoFocus })
         }
     }
 
@@ -173,7 +173,7 @@ class Camera2Photographer : InternalPhotographer {
         get() = _imageSize
         set(size) {
             if (size == null || !supportedImageSizes.contains(size)) {
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_INVALID_PARAM,
                         size.toString() + " not supported."
@@ -194,7 +194,7 @@ class Camera2Photographer : InternalPhotographer {
         get() = _videoSize
     set(size) {
         if (size == null || !supportedVideoSizes.contains(size)) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_INVALID_PARAM,
                     size.toString() + " not supported."
@@ -297,12 +297,12 @@ class Camera2Photographer : InternalPhotographer {
             override fun onDisconnected(camera: CameraDevice) {
                 camera.close()
                 this@Camera2Photographer.camera = null
-                callbackHandler!!.onPreviewStopped()
+                callbackHandler?.onPreviewStopped()
             }
 
             override fun onError(camera: CameraDevice, error: Int) {
                 stopPreview()
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_CAMERA
                     )
@@ -321,13 +321,13 @@ class Camera2Photographer : InternalPhotographer {
                 updateExposure(exposure)
                 applyZoom()
                 updatePreview(null)
-                callbackHandler!!.onPreviewStarted()
-                callbackHandler!!.onZoomChanged(zoom)
+                callbackHandler?.onPreviewStarted()
+                callbackHandler?.onZoomChanged(zoom)
             }
 
             override fun onConfigureFailed(session: CameraCaptureSession) {
                 stopPreview()
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_CAMERA
                     )
@@ -344,19 +344,22 @@ class Camera2Photographer : InternalPhotographer {
     // 이미지 캡쳐 Callback
     private val imageCaptureCallback: ImageCaptureCallback = object : ImageCaptureCallback() {
         public override fun onPrecaptureRequired() {
-            previewRequestBuilder!!.set(
+            previewRequestBuilder?.set(
                 CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_START
             )
             setState(STATE_PRECAPTURE)
             try {
-                captureSession!!.capture(previewRequestBuilder!!.build(), this, null)
-                previewRequestBuilder!!.set(
-                    CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
-                    CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_IDLE
-                )
+                previewRequestBuilder?.let {
+                    captureSession?.capture(it.build(), this, null)
+                    it.set(
+                        CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
+                        CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_IDLE
+                    )
+                }
+
             } catch (e: CameraAccessException) {
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_CAMERA,
                         e
@@ -372,7 +375,7 @@ class Camera2Photographer : InternalPhotographer {
 
     // 이미지 캡쳐 완료 후의 리스너
     private val onImageAvailableListener = OnImageAvailableListener { reader ->
-            backgroundHandler!!.post(
+            backgroundHandler?.post(
                 ImageSaver(
                     reader.acquireLatestImage(),
                     nextImageAbsolutePath,
@@ -482,7 +485,7 @@ class Camera2Photographer : InternalPhotographer {
             val permissionCheck =
                 ContextCompat.checkSelfPermission(activityContext!!, permission)
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_PERMISSION,
                         "Unsatisfied permission: $permission"
@@ -495,7 +498,7 @@ class Camera2Photographer : InternalPhotographer {
         startBackgroundThread()
         // 카메라 ID - > Front / Back / 광각 / 망원 등 핸드폰에 있는 사용할 수 있는 카메라 ID
         if (!chooseCameraIdByFacing()) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA
                 )
@@ -508,10 +511,10 @@ class Camera2Photographer : InternalPhotographer {
         }
         prepareWorkers()
 
-        callbackHandler!!.onDeviceConfigured()
+        callbackHandler?.onDeviceConfigured()
         startOpeningCamera()
         if (orientationEventListener != null) {
-            orientationEventListener!!.enable()
+            orientationEventListener?.enable()
         }
         isPreviewStarted = true
     }
@@ -523,11 +526,11 @@ class Camera2Photographer : InternalPhotographer {
     private fun chooseCameraIdByFacing(): Boolean {
         return try {
             val internalFacing = INTERNAL_FACINGS[facing]
-            val ids = cameraManager!!.cameraIdList
+            val ids = cameraManager?.cameraIdList
 
             // 디바이스 카메라 존재 X
-            if (ids.isEmpty()) {
-                callbackHandler!!.onError(
+            if (ids?.isEmpty() ?: true) {
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_CAMERA,
                         "No camera available."
@@ -537,9 +540,9 @@ class Camera2Photographer : InternalPhotographer {
             }
 
 
-            for (id in ids) {
-                val characteristics = cameraManager!!.getCameraCharacteristics(id)
-                val level = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)
+            for (id in ids!!) {
+                val characteristics = cameraManager?.getCameraCharacteristics(id)
+                val level = characteristics?.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)
                 if (level == null || level == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
                     continue
                 }
@@ -547,7 +550,7 @@ class Camera2Photographer : InternalPhotographer {
                 // LENS_FACING_FRONT -> 전면(0) / LENS_FACING_BACK -> 후면(1) / LENS_FACING_EXTERNAL -> 기타(2)
                 val internal = characteristics.get(CameraCharacteristics.LENS_FACING)
                 if (internal == null) {
-                    callbackHandler!!.onError(
+                    callbackHandler?.onError(
                         Error(
                             Error.ERROR_CAMERA,
                             "Unexpected state: LENS_FACING null."
@@ -564,9 +567,9 @@ class Camera2Photographer : InternalPhotographer {
             // INTERNAL_FACINGS 에 맞는 카메라가 없는 경우 0번째 렌즈로 카메라 정보 업데이트
             updateCameraInfo(ids[0], cameraManager!!.getCameraCharacteristics(ids[0]))
 
-            val internal = characteristics!!.get(CameraCharacteristics.LENS_FACING)
+            val internal = characteristics?.get(CameraCharacteristics.LENS_FACING)
             if (internal == null) {
-                callbackHandler!!.onError(
+                callbackHandler?.onError(
                     Error(
                         Error.ERROR_CAMERA,
                         "Unexpected state: LENS_FACING null."
@@ -588,7 +591,7 @@ class Camera2Photographer : InternalPhotographer {
             facing = Values.FACING_BACK
             true
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     e
@@ -634,9 +637,9 @@ class Camera2Photographer : InternalPhotographer {
      * @return Boolean
      */
     private fun collectCameraInfo(): Boolean {
-        val map = characteristics!!.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+        val map = characteristics?.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
         if (map == null) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     "Cannot get available preview/video sizes"
@@ -676,7 +679,7 @@ class Camera2Photographer : InternalPhotographer {
                         it.width, it.height,
                         ImageFormat.JPEG, 2
                     )
-                    imageReader!!.setOnImageAvailableListener(onImageAvailableListener, null)
+                    imageReader?.setOnImageAvailableListener(onImageAvailableListener, null)
                 }
             }
             Values.MODE_VIDEO -> {
@@ -700,14 +703,17 @@ class Camera2Photographer : InternalPhotographer {
         }
 
         // 구한 사이즈로 프리뷰 최적 사이즈 설정
-        previewSize = chooseOptimalPreviewSize(size)
+        previewSize = chooseOptimalPreviewSize(size!!)
 
         // Orientation
         val orientation = activityContext!!.resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            textureView!!.setAspectRatio(previewSize!!.width, previewSize!!.height)
-        } else {
-            textureView!!.setAspectRatio(previewSize!!.height, previewSize!!.width)
+
+        previewSize?.let {
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                textureView?.setAspectRatio(it.width, it.height)
+            } else {
+                textureView?.setAspectRatio(it.height, it.width)
+            }
         }
 
         preview?.gridModeLine = mode == Values.MODE_GRID
@@ -720,9 +726,11 @@ class Camera2Photographer : InternalPhotographer {
     @SuppressLint("MissingPermission")
     private fun startOpeningCamera() {
         try {
-            cameraManager!!.openCamera(cameraId!!, cameraDeviceCallback, null)
+            cameraId?.run {
+                cameraManager?.openCamera(this, cameraDeviceCallback, null)
+            }
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     "Failed to open camera: $cameraId",
@@ -748,7 +756,7 @@ class Camera2Photographer : InternalPhotographer {
     override fun stopPreview() {
         isPreviewStarted = false
         if (orientationEventListener != null) {
-            orientationEventListener!!.disable()
+            orientationEventListener?.disable()
         }
         throwIfNotInitialized()
         closeCamera()
@@ -827,11 +835,11 @@ class Camera2Photographer : InternalPhotographer {
     /**
      * 프리뷰 최적 사이즈 구하기
      */
-    private fun chooseOptimalPreviewSize(preferred: Size?): Size? {
+    private fun chooseOptimalPreviewSize(preferred: Size): Size? {
         val surfaceLonger: Int
         val surfaceShorter: Int
-        val surfaceWidth = preferred!!.width
-        val surfaceHeight = preferred!!.height
+        val surfaceWidth = preferred.width
+        val surfaceHeight = preferred.height
         if (surfaceWidth < surfaceHeight) {
             surfaceLonger = surfaceHeight
             surfaceShorter = surfaceWidth
@@ -869,11 +877,11 @@ class Camera2Photographer : InternalPhotographer {
     private fun closeCamera() {
         closePreviewSession()
         if (camera != null) {
-            camera!!.close()
+            camera?.close()
             camera = null
         }
         if (mediaRecorder != null) {
-            mediaRecorder!!.release()
+            mediaRecorder?.release()
             mediaRecorder = null
         }
     }
@@ -883,7 +891,7 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun closePreviewSession() {
         if (captureSession != null) {
-            captureSession!!.close()
+            captureSession?.close()
             captureSession = null
         }
     }
@@ -892,26 +900,29 @@ class Camera2Photographer : InternalPhotographer {
      * 프리뷰 및 CaptureSession 생성
      */
     private fun startCaptureSession() {
-        if (camera == null || textureView!!.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null || mode == Values.MODE_GRID && imageReader == null || mode == Values.MODE_SCAN && imageReader == null) {
+        if (camera == null || textureView?.surfaceTexture == null || mode == Values.MODE_IMAGE && imageReader == null || mode == Values.MODE_GRID && imageReader == null || mode == Values.MODE_SCAN && imageReader == null) {
             return
         }
         try {
             // 카메라 프리뷰 설정
-            textureView!!.setBufferSize(previewSize!!.width, previewSize!!.height)
-            previewRequestBuilder = camera!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-            val previewSurface = textureView!!.surface
-            previewRequestBuilder!!.addTarget(previewSurface)
+            previewSize?.run {
+                textureView?.setBufferSize(this.width, this.height)
+                previewRequestBuilder = camera?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+                val previewSurface = textureView?.surface
+                previewRequestBuilder?.addTarget(previewSurface!!)
 
-            // 프리뷰 업데이트
-            val surfaces: MutableList<Surface?> =
-                ArrayList()
-            surfaces.add(previewSurface)
-            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
-                surfaces.add(imageReader!!.surface)
+                // 프리뷰 업데이트
+                val surfaces: MutableList<Surface?> =
+                    ArrayList()
+                surfaces.add(previewSurface)
+                if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
+                    surfaces.add(imageReader?.surface)
+                }
+                camera?.createCaptureSession(surfaces, sessionCallback, null)
             }
-            camera!!.createCaptureSession(surfaces, sessionCallback, null)
+
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     e
@@ -926,7 +937,7 @@ class Camera2Photographer : InternalPhotographer {
     private fun updateAutoFocus() {
         // 오토포커스가 아니면 Mode_OFF 후 return
         if (!(autoFocus ?: false)) {
-            previewRequestBuilder!!.set(
+            previewRequestBuilder?.set(
                 CaptureRequest.CONTROL_AF_MODE,
                 CaptureRequest.CONTROL_AF_MODE_OFF
             )
@@ -934,10 +945,10 @@ class Camera2Photographer : InternalPhotographer {
         }
 
         val modes =
-            characteristics!!.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)
+            characteristics?.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)
 
         // 조리개 조절
-        previewRequestBuilder!!.set(
+        previewRequestBuilder?.set(
             CaptureRequest.LENS_FOCUS_DISTANCE,
             5f  /*0.0f means infinity focus  10f는 가까운 초점  0f에 가까울 수록 먼 곳에 초점을 잡는다.*/
         );
@@ -948,19 +959,19 @@ class Camera2Photographer : InternalPhotographer {
             modes.size == 1 && modes[0] == CameraCharacteristics.CONTROL_AF_MODE_OFF
         ) {
             autoFocus = false
-            previewRequestBuilder!!.set(
+            previewRequestBuilder?.set(
                 CaptureRequest.CONTROL_AF_MODE,
                 CaptureRequest.CONTROL_AF_MODE_OFF
             )
         } else {
             // 이미지 / 비디오 오토 포커스
             if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
                 )
             } else {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_VIDEO
                 )
@@ -975,11 +986,11 @@ class Camera2Photographer : InternalPhotographer {
         when (flash) {
             // 플래시 꺼져있음
             Values.FLASH_OFF -> {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON
                 )
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.FLASH_MODE,
                     CaptureRequest.FLASH_MODE_OFF
                 )
@@ -987,11 +998,11 @@ class Camera2Photographer : InternalPhotographer {
 
             // 촬영할 때만 플래시 켜기
             Values.FLASH_ON -> {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH
                 )
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.FLASH_MODE,
                     CaptureRequest.FLASH_MODE_OFF
                 )
@@ -999,11 +1010,11 @@ class Camera2Photographer : InternalPhotographer {
 
             // 플래시 항상 켜기
             Values.FLASH_TORCH -> {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON
                 )
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.FLASH_MODE,
                     CaptureRequest.FLASH_MODE_TORCH
                 )
@@ -1011,11 +1022,11 @@ class Camera2Photographer : InternalPhotographer {
 
             // 촬영 시, 플래시 자동으로 조정
             Values.FLASH_AUTO -> {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
                 )
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.FLASH_MODE,
                     CaptureRequest.FLASH_MODE_OFF
                 )
@@ -1023,11 +1034,11 @@ class Camera2Photographer : InternalPhotographer {
 
             // Auto와 비슷하지만, 적목 현상 감소 기능이 있는 모드.
             Values.FLASH_RED_EYE -> {
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
                 )
-                previewRequestBuilder!!.set(
+                previewRequestBuilder?.set(
                     CaptureRequest.FLASH_MODE,
                     CaptureRequest.FLASH_MODE_OFF
                 )
@@ -1096,7 +1107,7 @@ class Camera2Photographer : InternalPhotographer {
      */
     override fun takePicture() {
         if (mode == Values.MODE_VIDEO) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_INVALID_PARAM,
                     "Cannot takePicture() in non-IMAGE mode"
@@ -1107,7 +1118,7 @@ class Camera2Photographer : InternalPhotographer {
         nextImageAbsolutePath = try {
             Utils.imageFilePath
         } catch (e: IOException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Utils.errorFromThrowable(
                     e
                 )
@@ -1122,7 +1133,7 @@ class Camera2Photographer : InternalPhotographer {
         } else {
             captureStillPicture()
         }
-        preview!!.shot {
+        preview?.shot {
             activityContext?.runOnUiThread {
                 captureShowHideLineGridMode(true)
             }
@@ -1134,8 +1145,8 @@ class Camera2Photographer : InternalPhotographer {
      */
     override fun startRecording(configurator: MediaRecorderConfigurator?) {
         throwIfNoMediaRecorder()
-        if (camera == null || !textureView!!.isAvailable || previewSize == null) {
-            callbackHandler!!.onError(
+        if (camera == null || !(textureView?.isAvailable ?: false) || previewSize == null) {
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA
                 )
@@ -1145,7 +1156,7 @@ class Camera2Photographer : InternalPhotographer {
         nextVideoAbsolutePath = try {
             Utils.videoFilePath
         } catch (e: IOException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Utils.errorFromThrowable(
                     e
                 )
@@ -1155,32 +1166,37 @@ class Camera2Photographer : InternalPhotographer {
         try {
             closePreviewSession()
             setUpMediaRecorder(configurator)
-            previewRequestBuilder = camera!!.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
+            previewRequestBuilder = camera?.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
             val surfaces: MutableList<Surface?> =
                 ArrayList()
-            val previewSurface = textureView!!.surface
-            surfaces.add(previewSurface)
-            previewRequestBuilder!!.addTarget(previewSurface)
+            val previewSurface = textureView?.surface?.run {
+                surfaces.add(this)
+                previewRequestBuilder?.addTarget(this)
+            }
+
 
             // Set up Surface for the MediaRecorder
-            val recorderSurface = mediaRecorder!!.surface
-            surfaces.add(recorderSurface)
-            previewRequestBuilder!!.addTarget(recorderSurface)
+            val recorderSurface = mediaRecorder?.surface?.run{
+                surfaces.add(this)
+                previewRequestBuilder?.addTarget(this)
+            }
+
+
             // Start a capture session
             // Once the session starts, we can update the UI and start recording
 
-            camera!!.createCaptureSession(surfaces, object : CameraCaptureSession.StateCallback() {
+            camera?.createCaptureSession(surfaces, object : CameraCaptureSession.StateCallback() {
                 override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
                     captureSession = cameraCaptureSession
                     applyZoom()
                     updatePreview(null)
                     isRecordingVideo = true
-                    mediaRecorder!!.start()
-                    callbackHandler!!.onStartRecording()
+                    mediaRecorder?.start()
+                    callbackHandler?.onStartRecording()
                 }
 
                 override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
-                    callbackHandler!!.onError(
+                    callbackHandler?.onError(
                         Error(
                             Error.ERROR_CAMERA
                         )
@@ -1188,14 +1204,14 @@ class Camera2Photographer : InternalPhotographer {
                 }
             }, null)
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     e
                 )
             )
         } catch (e: IOException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Utils.errorFromThrowable(
                     e
                 )
@@ -1209,24 +1225,26 @@ class Camera2Photographer : InternalPhotographer {
     @Throws(IOException::class)
     private fun setUpMediaRecorder(configurator: MediaRecorderConfigurator?) {
         if (configurator == null || configurator.useDefaultConfigs()) {
-            mediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
-            mediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.SURFACE)
-            mediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            mediaRecorder!!.setOutputFile(nextVideoAbsolutePath)
-            mediaRecorder!!.setVideoEncodingBitRate(10000000)
-            mediaRecorder!!.setVideoFrameRate(30)
-            mediaRecorder!!.setVideoSize(videoSize!!.width, videoSize!!.height)
-            mediaRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            mediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            mediaRecorder?.apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setVideoSource(MediaRecorder.VideoSource.SURFACE)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setOutputFile(nextVideoAbsolutePath)
+                setVideoEncodingBitRate(10000000)
+                setVideoFrameRate(30)
+                setVideoSize(videoSize!!.width, videoSize!!.height)
+                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            }
         }
         configurator?.configure(mediaRecorder)
-        mediaRecorder!!.setOrientationHint(
+        mediaRecorder?.setOrientationHint(
             Utils.getOrientation(
                 sensorOrientation,
                 currentDeviceRotation
             )
         )
-        mediaRecorder!!.prepare()
+        mediaRecorder?.prepare()
     }
 
     /**
@@ -1236,9 +1254,9 @@ class Camera2Photographer : InternalPhotographer {
         throwIfNoMediaRecorder()
         if (!isRecordingVideo) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder!!.pause()
+            mediaRecorder?.pause()
         } else {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_UNSUPPORTED_OPERATION
                 )
@@ -1253,9 +1271,9 @@ class Camera2Photographer : InternalPhotographer {
         throwIfNoMediaRecorder()
         if (!isRecordingVideo) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder!!.resume()
+            mediaRecorder?.resume()
         } else {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_UNSUPPORTED_OPERATION
                 )
@@ -1270,9 +1288,9 @@ class Camera2Photographer : InternalPhotographer {
         if (!isRecordingVideo) return
         throwIfNoMediaRecorder()
         isRecordingVideo = false
-        mediaRecorder!!.stop()
-        mediaRecorder!!.reset()
-        callbackHandler!!.onFinishRecording(nextVideoAbsolutePath)
+        mediaRecorder?.stop()
+        mediaRecorder?.reset()
+        callbackHandler?.onFinishRecording(nextVideoAbsolutePath)
         startCaptureSession()
     }
 
@@ -1281,7 +1299,7 @@ class Camera2Photographer : InternalPhotographer {
      */
     override fun setOnEventListener(listener: Photographer.OnEventListener?) {
         throwIfNotInitialized()
-        callbackHandler!!.setOnEventListener(listener)
+        callbackHandler?.setOnEventListener(listener)
     }
 
     /**
@@ -1289,16 +1307,18 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun lockFocus() {
         // 초점을 잡기위한 Request 설정. - 오토포커스에서만 사용 가능
-        previewRequestBuilder!!.set(
+        previewRequestBuilder?.set(
             CaptureRequest.CONTROL_AF_TRIGGER,
             CaptureRequest.CONTROL_AF_TRIGGER_START
         )
         // Capture Flow 2 - 1
         try {
             imageCaptureCallback.setState(ImageCaptureCallback.STATE_LOCKING)
-            captureSession!!.capture(previewRequestBuilder!!.build(), imageCaptureCallback, null)
+            previewRequestBuilder?.run {
+                captureSession?.capture(this.build(), imageCaptureCallback, null)
+            }
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     "Failed to lock focus.",
@@ -1315,45 +1335,48 @@ class Camera2Photographer : InternalPhotographer {
     private fun captureStillPicture() {
         // 촬영 시, 수동 포커싱으로 전환 후 정적인 이미지 촬영.
         try {
-            val captureRequestBuilder = camera!!.createCaptureRequest(
+            val captureRequestBuilder = camera?.createCaptureRequest(
                 CameraDevice.TEMPLATE_STILL_CAPTURE
             )
-            captureRequestBuilder.addTarget(imageReader!!.surface)
+            imageReader?.surface?.run {
+                captureRequestBuilder?.addTarget(this)
 //            captureRequestBuilder.addTarget()
-            captureRequestBuilder.set(
-                CaptureRequest.CONTROL_AF_MODE,
-                previewRequestBuilder!!.get(CaptureRequest.CONTROL_AF_MODE)
-            )
+                captureRequestBuilder?.set(
+                    CaptureRequest.CONTROL_AF_MODE,
+                    previewRequestBuilder?.get(CaptureRequest.CONTROL_AF_MODE)
+                )
+            }
+
             when (flash) {
                 Values.FLASH_OFF -> {
-                    captureRequestBuilder.set(
+                    captureRequestBuilder?.set(
                         CaptureRequest.CONTROL_AE_MODE,
                         CaptureRequest.CONTROL_AE_MODE_ON
                     )
-                    captureRequestBuilder.set(
+                    captureRequestBuilder?.set(
                         CaptureRequest.FLASH_MODE,
                         CaptureRequest.FLASH_MODE_OFF
                     )
                 }
-                Values.FLASH_ON -> captureRequestBuilder.set(
+                Values.FLASH_ON -> captureRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH
                 )
                 Values.FLASH_TORCH -> {
-                    captureRequestBuilder.set(
+                    captureRequestBuilder?.set(
                         CaptureRequest.CONTROL_AE_MODE,
                         CaptureRequest.CONTROL_AE_MODE_ON
                     )
-                    captureRequestBuilder.set(
+                    captureRequestBuilder?.set(
                         CaptureRequest.FLASH_MODE,
                         CaptureRequest.FLASH_MODE_TORCH
                     )
                 }
-                Values.FLASH_AUTO -> captureRequestBuilder.set(
+                Values.FLASH_AUTO -> captureRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
                 )
-                Values.FLASH_RED_EYE -> captureRequestBuilder.set(
+                Values.FLASH_RED_EYE -> captureRequestBuilder?.set(
                     CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
                 )
@@ -1361,7 +1384,7 @@ class Camera2Photographer : InternalPhotographer {
 
             // 그리드 모드에서는 비트맵 변환이 필요하기에, ImageSaver에서 로테이션 처리 진행.
             if (mode != Values.MODE_GRID) {
-                captureRequestBuilder.set(
+                captureRequestBuilder?.set(
                     CaptureRequest.JPEG_ORIENTATION,
                     Utils.getOrientation(
                         sensorOrientation,
@@ -1370,40 +1393,42 @@ class Camera2Photographer : InternalPhotographer {
                 )
             }
 
-            captureRequestBuilder.set(
+            captureRequestBuilder?.set(
                 CaptureRequest.SCALER_CROP_REGION,
                 calculateZoomRect()
             )
 
-            captureSession!!.stopRepeating()
-            captureSession!!.capture(
-                captureRequestBuilder.build(),
-                object : CaptureCallback() {
-                    override fun onCaptureCompleted(
-                        session: CameraCaptureSession,
-                        request: CaptureRequest,
-                        result: TotalCaptureResult
-                    ) {
-                        unlockFocus()
-                        callbackHandler!!.onShotFinished(nextImageAbsolutePath)
-                    }
+            captureSession?.stopRepeating()
+            captureRequestBuilder?.run {
+                captureSession?.capture(
+                    this.build(),
+                    object : CaptureCallback() {
+                        override fun onCaptureCompleted(
+                            session: CameraCaptureSession,
+                            request: CaptureRequest,
+                            result: TotalCaptureResult
+                        ) {
+                            unlockFocus()
+                            callbackHandler?.onShotFinished(nextImageAbsolutePath)
+                        }
 
-                    override fun onCaptureFailed(
-                        session: CameraCaptureSession,
-                        request: CaptureRequest,
-                        failure: CaptureFailure
-                    ) {
-                        unlockFocus()
-                        callbackHandler!!.onError(
-                            Error(
-                                Error.ERROR_CAMERA
+                        override fun onCaptureFailed(
+                            session: CameraCaptureSession,
+                            request: CaptureRequest,
+                            failure: CaptureFailure
+                        ) {
+                            unlockFocus()
+                            callbackHandler?.onError(
+                                Error(
+                                    Error.ERROR_CAMERA
+                                )
                             )
-                        )
-                    }
-                }, null
-            )
+                        }
+                    }, null
+                )
+            }
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     "Cannot capture a still picture.",
@@ -1418,22 +1443,25 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun unlockFocus() {
         // AF Lock 해제. (트리거 취소) request
-        previewRequestBuilder!!.set(
+        previewRequestBuilder?.set(
             CaptureRequest.CONTROL_AF_TRIGGER,
             CaptureRequest.CONTROL_AF_TRIGGER_CANCEL
         )
         try {
-            captureSession!!.capture(previewRequestBuilder!!.build(), imageCaptureCallback, null)
-            updateAutoFocus()
-            updateFlash()
-            previewRequestBuilder!!.set(
-                CaptureRequest.CONTROL_AF_TRIGGER,
-                CaptureRequest.CONTROL_AF_TRIGGER_IDLE
-            )
-            updatePreview(null)
-            imageCaptureCallback.setState(ImageCaptureCallback.STATE_PREVIEW)
+            previewRequestBuilder?.run {
+                captureSession?.capture(this.build(), imageCaptureCallback, null)
+                updateAutoFocus()
+                updateFlash()
+                previewRequestBuilder?.set(
+                    CaptureRequest.CONTROL_AF_TRIGGER,
+                    CaptureRequest.CONTROL_AF_TRIGGER_IDLE
+                )
+                updatePreview(null)
+                imageCaptureCallback.setState(ImageCaptureCallback.STATE_PREVIEW)
+            }
+
         } catch (e: CameraAccessException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     e
@@ -1449,20 +1477,22 @@ class Camera2Photographer : InternalPhotographer {
         backgroundThread = HandlerThread("CameraBackground").apply {
             start()
         }
-        backgroundHandler = Handler(backgroundThread!!.looper)
+        backgroundThread?.run {
+            backgroundHandler = Handler(this.looper)
+        }
     }
 
     /**
      * Background 쓰레드 멈추기
      */
     private fun stopBackgroundThread() {
-        backgroundThread!!.quitSafely()
+        backgroundThread?.quitSafely()
         try {
-            backgroundThread!!.join()
+            backgroundThread?.join()
             backgroundThread = null
             backgroundHandler = null
         } catch (e: InterruptedException) {
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_DEFAULT_CODE,
                     e
@@ -1479,10 +1509,10 @@ class Camera2Photographer : InternalPhotographer {
     private fun focusAt(x: Int, y: Int) {
         var focusRect: Rect? = null
         val maxRegionsAf =
-            characteristics!!.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF)
+            characteristics?.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF)
         if (maxRegionsAf != null && maxRegionsAf >= 1) {
             val sensorArraySize =
-                characteristics!!.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
+                characteristics?.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
             focusRect = Utils.calculateFocusArea(
                 sensorArraySize,
                 displayOrientation,
@@ -1495,9 +1525,9 @@ class Camera2Photographer : InternalPhotographer {
         val callBack = object : FocusHandler.Callback {
             override fun onFinish(error: Error?) {
                 updatePreview(null)
-                preview!!.focusFinished()
+                preview?.focusFinished()
                 if (error != null) {
-                    callbackHandler!!.onError(error)
+                    callbackHandler?.onError(error)
                 }
             }
         }
@@ -1506,7 +1536,7 @@ class Camera2Photographer : InternalPhotographer {
             captureSession, previewRequestBuilder,
             focusRect, callBack)
 
-        preview!!.focusRequestAt(x, y)
+        preview?.focusRequestAt(x, y)
     }
 
     /**
@@ -1514,7 +1544,7 @@ class Camera2Photographer : InternalPhotographer {
      * @param newZoom
      */
     private fun updateZoom(newZoom: Float) {
-        callbackHandler!!.onZoomChanged(newZoom)
+        callbackHandler?.onZoomChanged(newZoom)
         applyZoom()
     }
 
@@ -1531,7 +1561,7 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun applyZoom() {
         val zoomRect = calculateZoomRect()
-        previewRequestBuilder!!.set(
+        previewRequestBuilder?.set(
             CaptureRequest.SCALER_CROP_REGION,
             zoomRect
         )
@@ -1543,11 +1573,11 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun calculateZoomRect(): Rect? {
         val origin =
-            characteristics!!.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
+            characteristics?.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
                 ?: return null
-        if (Utils.checkFloatEqual(zoom!!, 1f) || zoom!! < 1f) return origin
-        val xOffset = ((1 - 1 / zoom!!) / 2 * (origin.right - origin.left)).toInt()
-        val yOffset = ((1 - 1 / zoom!!) / 2 * (origin.bottom - origin.top)).toInt()
+        if (Utils.checkFloatEqual(zoom, 1f) || zoom < 1f) return origin
+        val xOffset = ((1 - 1 / zoom) / 2 * (origin.right - origin.left)).toInt()
+        val yOffset = ((1 - 1 / zoom) / 2 * (origin.bottom - origin.top)).toInt()
         return Rect(
             xOffset,
             yOffset,
@@ -1565,22 +1595,25 @@ class Camera2Photographer : InternalPhotographer {
             return
         }
         try {
-            if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
-                captureSession!!.setRepeatingRequest(
-                    previewRequestBuilder!!.build(),
-                    imageCaptureCallback,
-                    null
-                )
-            } else {
-                previewRequestBuilder!!.set(
-                    CaptureRequest.CONTROL_MODE,
-                    CameraMetadata.CONTROL_MODE_AUTO
-                )
-                captureSession!!.setRepeatingRequest(previewRequestBuilder!!.build(), null, null)
+            previewRequestBuilder?.run {
+                if (mode == Values.MODE_IMAGE || mode == Values.MODE_GRID || mode == Values.MODE_SCAN) {
+                    captureSession?.setRepeatingRequest(
+                        this.build(),
+                        imageCaptureCallback,
+                        null
+                    )
+                } else {
+                    previewRequestBuilder?.set(
+                        CaptureRequest.CONTROL_MODE,
+                        CameraMetadata.CONTROL_MODE_AUTO
+                    )
+                    captureSession?.setRepeatingRequest(this.build(), null, null)
+                }
             }
+
         } catch (e: CameraAccessException) {
             exceptionCallback?.run()
-            callbackHandler!!.onError(
+            callbackHandler?.onError(
                 Error(
                     Error.ERROR_CAMERA,
                     e

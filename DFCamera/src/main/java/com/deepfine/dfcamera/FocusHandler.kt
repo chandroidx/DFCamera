@@ -15,7 +15,7 @@ internal class FocusHandler {
             return
         }
         try {
-            captureSession!!.stopRepeating()
+            captureSession?.stopRepeating()
         } catch (e: CameraAccessException) {
             callback.onFinish(
                 Error(
@@ -87,7 +87,7 @@ internal class FocusHandler {
                     )
                 }
             }
-            captureSession.capture(captureRequestBuilder.build(), focusCallbackHandler, null)
+            captureSession?.capture(captureRequestBuilder.build(), focusCallbackHandler, null)
         } catch (e: CameraAccessException) {
             e.printStackTrace()
             callback.onFinish(
