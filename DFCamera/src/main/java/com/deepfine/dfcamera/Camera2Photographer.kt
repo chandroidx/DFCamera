@@ -1229,7 +1229,6 @@ class Camera2Photographer : InternalPhotographer {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setOutputFile(nextVideoAbsolutePath)
                 setVideoEncodingBitRate(10000000)
                 setVideoFrameRate(30)
                 setVideoSize(videoSize!!.width, videoSize!!.height)
@@ -1237,6 +1236,7 @@ class Camera2Photographer : InternalPhotographer {
                 setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             }
         }
+        mediaRecorder?.setOutputFile(nextVideoAbsolutePath)
         configurator?.configure(mediaRecorder)
         mediaRecorder?.setOrientationHint(
             Utils.getOrientation(
