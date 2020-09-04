@@ -131,7 +131,8 @@ class GridModeView @JvmOverloads constructor(
                         val textView = GridModeButton(
                             context,
                             text ?: "" + (j + 1 + i * (columnsCount + 1)).toString(),
-                            lineColor
+                            lineColor,
+                            bgColor!!
                         ).apply {
                             this.layoutParams = LinearLayout.LayoutParams(
                                 0,
@@ -158,10 +159,10 @@ class GridModeView @JvmOverloads constructor(
 
                                 if (isExist) {
                                     selected.remove(view.id)
-                                    (view as? GridModeButton)?.selected(false, bgColor)
+                                    (view as? GridModeButton)?.selected(false)
                                 } else {
                                     selected.add(view.id)
-                                    (view as? GridModeButton)?.selected(true, bgColor)
+                                    (view as? GridModeButton)?.selected(true)
                                 }
 
                                 callback?.let {

@@ -18,7 +18,8 @@ import androidx.core.content.res.ResourcesCompat
 final class GridModeButton @JvmOverloads constructor(
     @NonNull context: Context,
     private val text: String,
-    private val lineColor: Int? = 0x000000
+    private val lineColor: Int? = 0x000000,
+    private val bgColor: Int = 0xCC000000.toInt()
 ) : AppCompatTextView(context) {
     private val drawable: GradientDrawable = GradientDrawable()
 
@@ -63,12 +64,9 @@ final class GridModeButton @JvmOverloads constructor(
         }
     }
 ///0xCC000000
-    fun selected(selected: Boolean, bgColor: Int? = 0xCC000000.toInt()) {
+    fun selected(selected: Boolean) {
         drawable.apply {
-            lineColor?.let {
-                setStroke(1, it)
-            }
-            if (!selected) setColor(ResourcesCompat.getColor(context.resources, R.color.transparent, null)) else  setColor(bgColor!!)
+            if (!selected) setColor(ResourcesCompat.getColor(context.resources, R.color.transparent, null)) else  setColor(bgColor)
         }
     }
 }
