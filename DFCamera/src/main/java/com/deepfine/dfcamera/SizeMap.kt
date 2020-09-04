@@ -73,7 +73,7 @@ internal class SizeMap {
     }
 
     fun defaultSize(): Size {
-        return mRatios[AspectRatio.parse("4:3")]!!.last()
+        return mRatios[AspectRatio.parse("16:9")]!!.last()
     }
 
     fun clear() {

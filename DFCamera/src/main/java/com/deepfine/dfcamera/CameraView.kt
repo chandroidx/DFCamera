@@ -23,7 +23,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     val textureView: AutoFitTextureView
     private var overlay: CameraViewOverlay? = null
     private val displayOrientationDetector: DisplayOrientationDetector
-    private val aspectRatio: String?
+    private var aspectRatio: String?
     private val autoFocus: Boolean
     private val facing: Int
     private val flash: Int
@@ -193,6 +193,11 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         addView(textureView, textureViewParams)
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CameraView)
         aspectRatio = typedArray.getString(R.styleable.CameraView_aspectRatio)
+
+        if (null == aspectRatio) {
+            aspectRatio = "16:9"
+        }
+
         autoFocus = typedArray.getBoolean(R.styleable.CameraView_autoFocus, true)
         facing = typedArray.getInt(
             R.styleable.CameraView_facing,

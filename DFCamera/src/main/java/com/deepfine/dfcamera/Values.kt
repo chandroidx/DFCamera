@@ -4,7 +4,7 @@ interface Values {
     companion object {
         const val DEBUG = false
         val DEFAULT_ASPECT_RATIO: AspectRatio =
-            AspectRatio.of(4, 3)
+            AspectRatio.of(16, 9)
         const val MODE_IMAGE = 0
         const val MODE_VIDEO = 1
         const val MODE_GRID = 2
