@@ -45,6 +45,8 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var gridModeMarginTopBottom: Int? = null
     private var gridModeDimColor: Int? = null
 
+    public var enableInterceptTouch: Boolean = true;
+
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null) : this(
         context,
@@ -314,6 +316,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
                 }
             }
         }
+        enableInterceptTouch = isSmartGlasses
 
         gridModeView = GridModeView(
             context,
@@ -377,11 +380,11 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return !isSmartGlasses
+        return !enableInterceptTouch
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (isSmartGlasses) return false
+        if (enableInterceptTouch) return false
         if (gestureDetector.onTouchEvent(event)) {
             return true
         }

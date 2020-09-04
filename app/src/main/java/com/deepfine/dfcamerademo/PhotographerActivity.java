@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -124,7 +126,7 @@ public class PhotographerActivity extends AppCompatActivity {
 
     @OnClick(R.id.exposure4)
     void chooseExposure4() {
-        photographer.setExposure(1f);
+        preview.setEnableInterceptTouch(!preview.getEnableInterceptTouch());
     }
 
     @OnClick(R.id.zoom1)
@@ -215,6 +217,36 @@ public class PhotographerActivity extends AppCompatActivity {
                 finishRecordingIfNeeded();
             } else {
                 isRecordingVideo = true;
+                /*
+                new Photographer.MediaRecorderConfigurator() {
+                    @Override
+                    public void configure(@org.jetbrains.annotations.Nullable MediaRecorder mediaRecorder) {
+                        if (null != mediaRecorder) {
+                            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//                            CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+//                            mediaRecorder.setVideoFrameRate(profile.videoFrameRate);
+//                            mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+//                            mediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
+//                            mediaRecorder.setAudioSamplingRate(profile.audioSampleRate);
+
+                            mediaRecorder.setVideoFrameRate(30);
+//                            mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+                            mediaRecorder.setAudioEncodingBitRate(384000);
+                            mediaRecorder.setAudioSamplingRate(44100);
+                            //                    mRecorder.setAudioSamplingRate(48000);
+                        }
+                    }
+
+                    @Override
+                    public boolean useDefaultConfigs() {
+                        return false;
+                    }
+                }
+                 */
                 photographer.startRecording(null);
                 actionButton.setEnabled(false);
             }
