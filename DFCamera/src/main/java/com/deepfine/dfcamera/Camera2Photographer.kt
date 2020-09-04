@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Bitmap
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.SurfaceTexture
@@ -19,11 +18,11 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import android.util.Range
 import android.util.SparseIntArray
 import android.view.OrientationEventListener
 import android.view.Surface
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.deepfine.camera.Photographer.MediaRecorderConfigurator
 import java.io.IOException
@@ -389,6 +388,7 @@ class Camera2Photographer : InternalPhotographer {
                     )
                 )
             )
+            preview?.gridModeViewOrNull?.alpha = 0.0f
         }
 
     //////////////////// Function ////////////////////
@@ -1133,11 +1133,7 @@ class Camera2Photographer : InternalPhotographer {
         } else {
             captureStillPicture()
         }
-        preview?.shot {
-            activityContext?.runOnUiThread {
-                captureShowHideLineGridMode(true)
-            }
-        }
+        preview?.shot()
     }
 
     /**
@@ -1413,6 +1409,8 @@ class Camera2Photographer : InternalPhotographer {
                         ) {
                             unlockFocus()
                             callbackHandler?.onShotFinished(nextImageAbsolutePath)
+                            captureShowHideLineGridMode(true)
+
                         }
 
                         override fun onCaptureFailed(
@@ -1426,6 +1424,8 @@ class Camera2Photographer : InternalPhotographer {
                                     Error.ERROR_CAMERA
                                 )
                             )
+                            captureShowHideLineGridMode(true)
+
                         }
                     }, null
                 )
@@ -1632,11 +1632,19 @@ class Camera2Photographer : InternalPhotographer {
      */
     private fun captureShowHideLineGridMode(show: Boolean) : GridModeView? {
         if (mode != Values.MODE_GRID) return null
+
         preview?.gridModeViewOrNull?.let {
             when(show) {
                 true -> {
                     it.showButtonAttrs()
+
+                    preview?.gridModeViewOrNull?.apply {
+                        animate()
+                            .alpha(1.0f)
+                            .setDuration(300)
+                    }
                     return null
+
                 }
                 false -> {
                     it.hideButtonAttrs()

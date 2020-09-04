@@ -60,7 +60,7 @@ internal class CameraViewOverlay @JvmOverloads constructor(
         }
     }
 
-    fun shot(isEnd: ()->Unit) {
+    fun shot() {
         val colorFrom = Color.TRANSPARENT
         val colorTo = -0x51000000
         val colorAnimation =
@@ -81,7 +81,6 @@ internal class CameraViewOverlay @JvmOverloads constructor(
         postDelayed(
             {
                 colorAnimation.reverse()
-                isEnd()
             },
             SHUTTER_ONE_WAY_TIME.toLong()
         )

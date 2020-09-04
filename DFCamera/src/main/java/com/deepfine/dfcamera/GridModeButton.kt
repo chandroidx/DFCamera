@@ -21,7 +21,14 @@ final class GridModeButton @JvmOverloads constructor(
     private val lineColor: Int? = 0x000000,
     private val bgColor: Int = 0xCC000000.toInt()
 ) : AppCompatTextView(context) {
-    private val drawable: GradientDrawable = GradientDrawable()
+    private val showDrawable: GradientDrawable = GradientDrawable().apply {
+        lineColor?.let {
+            this.setStroke(1, it)
+        }
+    }
+    private val hideDrawable: GradientDrawable = GradientDrawable().apply{
+        setColor(bgColor)
+    }
 
     init {
         showButtonAttrs(true)
@@ -31,13 +38,8 @@ final class GridModeButton @JvmOverloads constructor(
     fun hideButtonAttrs(selected: Boolean) {
         when (selected) {
             true -> {
-                drawable.apply {
-                    lineColor?.let {
-                        this.setStroke(0, it)
-                    }
-                }
                 this.setText("")
-                this.background = drawable
+                this.background = hideDrawable
             }
             false -> {
                 visibility = View.INVISIBLE
@@ -50,13 +52,8 @@ final class GridModeButton @JvmOverloads constructor(
     fun showButtonAttrs(selected: Boolean) {
         when (selected) {
             true -> {
-                drawable.apply {
-                    lineColor?.let {
-                        this.setStroke(1, it)
-                    }
-                }
                 this.setText(text)
-                this.background = drawable
+                this.background = showDrawable
             }
             false -> {
                 visibility = View.VISIBLE
@@ -65,8 +62,8 @@ final class GridModeButton @JvmOverloads constructor(
     }
 ///0xCC000000
     fun selected(selected: Boolean) {
-        drawable.apply {
-            if (!selected) setColor(ResourcesCompat.getColor(context.resources, R.color.transparent, null)) else  setColor(bgColor)
+        showDrawable.apply {
+            if (!selected) setColor(ResourcesCompat.getColor(context.resources, R.color.transparent, null)) else setColor(bgColor)
         }
     }
 }

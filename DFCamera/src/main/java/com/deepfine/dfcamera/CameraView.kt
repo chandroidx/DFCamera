@@ -148,10 +148,8 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         overlay!!.focusFinished()
     }
 
-    fun shot(closure: () -> Unit) {
-        return overlay!!.shot {
-            closure()
-        }
+    fun shot() {
+        return overlay!!.shot()
     }
 
     interface Callback : AutoFitTextureView.Callback {
