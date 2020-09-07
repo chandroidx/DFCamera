@@ -269,7 +269,7 @@ class Camera2Photographer : InternalPhotographer {
     private var previewRequestBuilder: CaptureRequest.Builder? = null
     private var cameraId: String? = null
     private var characteristics: CameraCharacteristics? = null
-    private var sensorOrientation = 90
+    private var sensorOrientation = if (isSmartGlasses) 90 else 90
     // last determined degree, it is either Surface.Rotation_0, _90, _180, _270, or -1 (undetermined)
     private var currentDeviceRotation = -1
     private var maxZoom = 2f
@@ -1576,7 +1576,7 @@ class Camera2Photographer : InternalPhotographer {
         val origin =
             characteristics?.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
                 ?: return null
-        if (Utils.checkFloatEqual(zoom, 1f) || zoom < 1f) return origin
+        if (zoom < 1f) return origin
         val xOffset = ((1 - 1 / zoom) / 2 * (origin.right - origin.left)).toInt()
         val yOffset = ((1 - 1 / zoom) / 2 * (origin.bottom - origin.top)).toInt()
         return Rect(

@@ -184,7 +184,7 @@ object Utils {
         return Math.abs(a - b) < 0.001
     }
 
-    private const val FOCUS_AREA_SIZE = 150
+    private const val FOCUS_AREA_SIZE = 108
     fun calculateFocusArea(
         sensorArraySize: Rect?,
         displayOrientation: Int,

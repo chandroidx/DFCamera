@@ -105,14 +105,14 @@ class FocusGridView @JvmOverloads constructor(
                 val metrics = resources.displayMetrics
 
                 val contentsHeight: Int = if (metrics.heightPixels > metrics.widthPixels) {
-                    (metrics.widthPixels - metrics.density * marginTopBottom!!) / (columnsCount + 1)
+                    (metrics.widthPixels - marginTopBottom!! * 2) / (columnsCount + 1)
                 } else {
-                    (metrics.heightPixels - metrics.density * marginTopBottom!!) / (lineCount + 1)
+                    (metrics.heightPixels - marginTopBottom!! * 2) / (lineCount + 1)
                 }.toInt()
 
                 val container: LinearLayout = LinearLayout(context).apply {
                     layoutParams = LinearLayout.LayoutParams(
-                        (contentsHeight * (columnsCount + 1)),
+                        (contentsHeight * 5),
                         (contentsHeight * (lineCount + 1)),
                         0f
                     )
@@ -132,8 +132,7 @@ class FocusGridView @JvmOverloads constructor(
                     for (j in 0..columnsCount) {
                         val textView = GridModeButton(
                             context,
-                            text ?: "" + (j + 1 + i * (columnsCount + 1)).toString(),
-                            lineColor
+                            text ?: "" + (j + 1 + i * (columnsCount + 1)).toString()
                         ).apply {
                             this.layoutParams = LinearLayout.LayoutParams(
                                 0,
@@ -155,10 +154,15 @@ class FocusGridView @JvmOverloads constructor(
                                     val location = IntArray(2)
                                     view.getLocationOnScreen(location)
 
+//                                    val x = location[0] + (view.width / 2)
+//                                    val y = location[1] + view.height + (marginTopBottom / 2)
+
                                     val x = location[0] + (view.width / 2)
-                                    val y = location[1] + view.height + (marginTopBottom / 2)
+                                    val y = location[1] + (view.height / 2)
 
                                     it.onTouch(x.toInt(), y.toInt())
+
+                                    focusAnimation(0x80ffc800.toInt())
                                 }
                             }
                         }
@@ -168,10 +172,7 @@ class FocusGridView @JvmOverloads constructor(
                         context,
                         30f
                         ))
-//                            TypedValue.COMPLEX_UNIT_PX, textSize?.toFloat() ?: Utils.dpToPixel(
-//                        context,
-//                        30f
-//                        )
+
                         textView.id = View.generateViewId()
 
                         row.addView(textView)

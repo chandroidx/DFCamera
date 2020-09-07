@@ -29,7 +29,7 @@ class GridModeView @JvmOverloads constructor(
     var gridMode: Grid
         get() = _gridMode
         set(value) {
-//            if (_gridMode == value) { return }
+            if (_gridMode == value) { return }
             _gridMode = value
             updateView()
             postInvalidate()
@@ -104,9 +104,9 @@ class GridModeView @JvmOverloads constructor(
                 val metrics = resources.displayMetrics
 
                 val contentsHeight: Int = if (metrics.heightPixels > metrics.widthPixels) {
-                    (metrics.widthPixels - metrics.density * marginTopBottom!!) / (columnsCount + 1)
+                    (metrics.widthPixels - marginTopBottom!! * 2) / (columnsCount + 1)
                 } else {
-                    (metrics.heightPixels - metrics.density * marginTopBottom!!) / (lineCount + 1)
+                    (metrics.heightPixels - marginTopBottom!! * 2) / (lineCount + 1)
                 }.toInt()
 
                 val container: LinearLayout = LinearLayout(context).apply {

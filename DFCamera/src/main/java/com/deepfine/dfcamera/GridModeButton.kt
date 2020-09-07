@@ -1,12 +1,16 @@
 package com.deepfine.camera
 
 import android.R
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.TransitionDrawable
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.ResourcesCompat
+
 
 /**
  * @Description GridModeButton
@@ -26,7 +30,7 @@ final class GridModeButton @JvmOverloads constructor(
             this.setStroke(1, it)
         }
     }
-    private val hideDrawable: GradientDrawable = GradientDrawable().apply{
+    private val hideDrawable: GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
     }
 
@@ -34,7 +38,9 @@ final class GridModeButton @JvmOverloads constructor(
         showButtonAttrs(true)
     }
 
-
+    /**
+     *  촬영 시, 그리드 라인 및 선택되지 않은 영역 숨기기
+     */
     fun hideButtonAttrs(selected: Boolean) {
         when (selected) {
             true -> {
@@ -49,6 +55,9 @@ final class GridModeButton @JvmOverloads constructor(
 
     }
 
+    /**
+     *  촬영 후 이전 그리드 속성 그대로 적용
+     */
     fun showButtonAttrs(selected: Boolean) {
         when (selected) {
             true -> {
@@ -60,10 +69,37 @@ final class GridModeButton @JvmOverloads constructor(
             }
         }
     }
-///0xCC000000
+
+    /**
+     * 그리드 모드에서 선택 여부에 따른 drawable적용
+     */
     fun selected(selected: Boolean) {
         showDrawable.apply {
-            if (!selected) setColor(ResourcesCompat.getColor(context.resources, R.color.transparent, null)) else setColor(bgColor)
+            if (!selected) setColor(
+                ResourcesCompat.getColor(
+                    context.resources,
+                    R.color.transparent,
+                    null
+                )
+            ) else setColor(bgColor)
+        }
+    }
+
+    /**
+     * 포커싱 애니메이션 효과 적용
+     */
+    fun focusAnimation(lineColor: Int) {
+        val width = (resources.displayMetrics.density).toInt()
+
+
+        ValueAnimator.ofObject(ArgbEvaluator(), R.color.transparent, lineColor).apply {
+            duration = 500
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+            addUpdateListener { animator ->
+                showDrawable.setStroke(width, animator.animatedValue as Int)
+            }
+            start()
         }
     }
 }

@@ -19,6 +19,7 @@
         app:flash="auto"
         app:pinchToZoom="true"
         app:isSmartGlasses="true"
+        app:gridModeMarginTopBottom="78dp"
         app:showFocusIndicator="true" />
 
     <ImageButton
