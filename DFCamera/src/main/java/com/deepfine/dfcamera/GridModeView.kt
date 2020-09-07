@@ -29,7 +29,7 @@ class GridModeView @JvmOverloads constructor(
     var gridMode: Grid
         get() = _gridMode
         set(value) {
-            if (_gridMode == value) { return }
+//            if (_gridMode == value) { return }
             _gridMode = value
             updateView()
             postInvalidate()

@@ -387,6 +387,7 @@ class Camera2Photographer : InternalPhotographer {
                         currentDeviceRotation
                     )
                 ) {
+                    callbackHandler?.onShotFinished(nextImageAbsolutePath)
                     captureShowHideLineGridMode(true)
                 }
             )
@@ -1410,7 +1411,6 @@ class Camera2Photographer : InternalPhotographer {
                             result: TotalCaptureResult
                         ) {
                             unlockFocus()
-                            callbackHandler?.onShotFinished(nextImageAbsolutePath)
                         }
 
                         override fun onCaptureFailed(

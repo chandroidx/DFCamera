@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:mode="video"
+        app:mode="image"
         app:autoFocus="true"
         app:facing="back"
         app:fillSpace="true"
@@ -216,6 +216,7 @@
             android:layout_height="64dp"
             android:layout_centerInParent="true"
             android:padding="16dp"
+            android:contentDescription="촬영"
             android:background="?android:selectableItemBackground"/>
 
         <ImageButton
