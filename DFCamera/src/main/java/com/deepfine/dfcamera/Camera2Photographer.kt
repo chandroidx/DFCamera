@@ -386,7 +386,9 @@ class Camera2Photographer : InternalPhotographer {
                         sensorOrientation,
                         currentDeviceRotation
                     )
-                )
+                ) {
+                    captureShowHideLineGridMode(true)
+                }
             )
             preview?.gridModeViewOrNull?.alpha = 0.0f
         }
@@ -1409,8 +1411,6 @@ class Camera2Photographer : InternalPhotographer {
                         ) {
                             unlockFocus()
                             callbackHandler?.onShotFinished(nextImageAbsolutePath)
-                            captureShowHideLineGridMode(true)
-
                         }
 
                         override fun onCaptureFailed(
@@ -1424,8 +1424,6 @@ class Camera2Photographer : InternalPhotographer {
                                     Error.ERROR_CAMERA
                                 )
                             )
-                            captureShowHideLineGridMode(true)
-
                         }
                     }, null
                 )
@@ -1636,12 +1634,14 @@ class Camera2Photographer : InternalPhotographer {
         preview?.gridModeViewOrNull?.let {
             when(show) {
                 true -> {
-                    it.showButtonAttrs()
+                    activityContext?.runOnUiThread {
+                        it.showButtonAttrs()
 
-                    preview?.gridModeViewOrNull?.apply {
-                        animate()
-                            .alpha(1.0f)
-                            .setDuration(300)
+                        preview?.gridModeViewOrNull?.apply {
+                            animate()
+                                .alpha(1.0f)
+                                .setDuration(300)
+                        }
                     }
                     return null
 

@@ -15,7 +15,8 @@ internal class ImageSaver(
     private val gridModeView: GridModeView?,
     private val width: Int,
     private val height: Int,
-    private val degree: Int
+    private val degree: Int,
+    private val completion: () -> Unit
 ) :
     Runnable {
     override fun run() {
@@ -23,8 +24,8 @@ internal class ImageSaver(
         val bytes = ByteArray(buffer.remaining())
         buffer[bytes]
         var output: FileOutputStream? = null
-
         try {
+
             output = FileOutputStream(filePath)
 
             gridModeView?.let { gridModeView ->
@@ -74,6 +75,7 @@ internal class ImageSaver(
                     e.printStackTrace()
                 }
             }
+            completion()
         }
     }
 
