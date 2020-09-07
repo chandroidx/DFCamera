@@ -89,7 +89,7 @@ final class GridModeButton @JvmOverloads constructor(
      * 포커싱 애니메이션 효과 적용
      */
     fun focusAnimation(lineColor: Int) {
-        val width = (resources.displayMetrics.density).toInt()
+        val width = 2 * (resources.displayMetrics.density).toInt()
 
 
         ValueAnimator.ofObject(ArgbEvaluator(), R.color.transparent, lineColor).apply {
