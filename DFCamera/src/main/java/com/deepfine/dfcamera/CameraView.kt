@@ -140,6 +140,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         overlay!!.setCanvasDrawer(drawer)
     }
 
+    // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분
     fun focusRequestAt(x: Int, y: Int) {
         overlay!!.focusRequestAt(x, y)
     }

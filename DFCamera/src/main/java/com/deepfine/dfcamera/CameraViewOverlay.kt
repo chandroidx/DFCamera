@@ -25,6 +25,7 @@ internal class CameraViewOverlay @JvmOverloads constructor(
         paints = drawer.initPaints()
     }
 
+    // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분
     fun focusRequestAt(x: Int, y: Int) {
         if (x >= 0 && x <= measuredWidth && y >= 0 && y <= measuredHeight) {
             focusPoint = Point(x, y)
