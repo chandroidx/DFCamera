@@ -1657,4 +1657,10 @@ class Camera2Photographer : InternalPhotographer {
         }
         return null
     }
+
+    override fun clearAllGrid() {
+        preview?.gridModeViewOrNull?.apply {
+            clearAllGrid()
+        }
+    }
 }

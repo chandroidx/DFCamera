@@ -33,6 +33,10 @@ interface Photographer {
      */
     fun resumeRecording()
     fun finishRecording()
+
+    // 그리드 모드 초기화
+    fun clearAllGrid()
+
     interface MediaRecorderConfigurator {
         /**
          * Our Photographer's MediaRecorder use the default configs below:

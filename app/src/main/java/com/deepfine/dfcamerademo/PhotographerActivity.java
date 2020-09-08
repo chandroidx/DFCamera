@@ -136,7 +136,7 @@ public class PhotographerActivity extends AppCompatActivity {
 
     @OnClick(R.id.zoom2)
     void chooseZoom2() {
-        photographer.setZoom(2.0f);
+        photographer.clearAllGrid();
     }
 
     @OnClick(R.id.zoom3)

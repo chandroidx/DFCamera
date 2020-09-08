@@ -240,6 +240,14 @@ class GridModeView @JvmOverloads constructor(
         }
     }
 
+    public fun clearAllGrid() {
+        selected.map {
+            (this.findViewById(it) as? GridModeButton)?.selected(false)
+        }
+
+        selected.clear()
+    }
+
     init {
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
@@ -247,4 +255,5 @@ class GridModeView @JvmOverloads constructor(
         )
         orientation = LinearLayout.VERTICAL
     }
+
 }
