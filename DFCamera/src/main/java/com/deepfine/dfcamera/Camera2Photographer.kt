@@ -269,7 +269,7 @@ class Camera2Photographer : InternalPhotographer {
     private var previewRequestBuilder: CaptureRequest.Builder? = null
     private var cameraId: String? = null
     private var characteristics: CameraCharacteristics? = null
-    private var sensorOrientation = if (isSmartGlasses) 90 else 90
+    private var sensorOrientation = if (isSmartGlasses) 0 else 90
     // last determined degree, it is either Surface.Rotation_0, _90, _180, _270, or -1 (undetermined)
     private var currentDeviceRotation = -1
     private var maxZoom = 2f
