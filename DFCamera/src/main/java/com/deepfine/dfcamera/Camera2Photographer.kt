@@ -429,33 +429,36 @@ class Camera2Photographer : InternalPhotographer {
         })
 
         // 회전 전환 리스너
-        orientationEventListener = object : OrientationEventListener(activityContext) {
-            // a slop before change the device orientation
-            private val changeSlop = 10
-            override fun onOrientationChanged(orientation: Int) {
-                if (shouldChange(orientation)) {
-                    var rotation = Surface.ROTATION_0
-                    if (orientation >= 0 && orientation < 45 || orientation >= 315 && orientation < 360) {
-                        rotation = Surface.ROTATION_0
-                    } else if (orientation >= 45 && orientation < 135) {
-                        rotation = Surface.ROTATION_270
-                    } else if (orientation >= 135 && orientation < 225) {
-                        rotation = Surface.ROTATION_180
-                    } else if (orientation >= 225 && orientation < 315) {
-                        rotation = Surface.ROTATION_90
+        if (!isSmartGlasses) {
+            orientationEventListener = object : OrientationEventListener(activityContext) {
+                // a slop before change the device orientation
+                private val changeSlop = 10
+                override fun onOrientationChanged(orientation: Int) {
+                    if (shouldChange(orientation)) {
+                        var rotation = Surface.ROTATION_0
+                        if (orientation >= 0 && orientation < 45 || orientation >= 315 && orientation < 360) {
+                            rotation = Surface.ROTATION_0
+                        } else if (orientation >= 45 && orientation < 135) {
+                            rotation = Surface.ROTATION_270
+                        } else if (orientation >= 135 && orientation < 225) {
+                            rotation = Surface.ROTATION_180
+                        } else if (orientation >= 225 && orientation < 315) {
+                            rotation = Surface.ROTATION_90
+                        }
+                        currentDeviceRotation = rotation
                     }
-                    currentDeviceRotation = rotation
+                }
+
+                private fun shouldChange(orientation: Int): Boolean {
+                    if (currentDeviceRotation == -1) return true
+                    if (currentDeviceRotation == 0) return orientation >= 45 + changeSlop && orientation < 315 - changeSlop
+                    val upLimit = currentDeviceRotation + 45 + changeSlop
+                    val downLimit = currentDeviceRotation - 45 - changeSlop
+                    return !(orientation >= downLimit && orientation < upLimit)
                 }
             }
-
-            private fun shouldChange(orientation: Int): Boolean {
-                if (currentDeviceRotation == -1) return true
-                if (currentDeviceRotation == 0) return orientation >= 45 + changeSlop && orientation < 315 - changeSlop
-                val upLimit = currentDeviceRotation + 45 + changeSlop
-                val downLimit = currentDeviceRotation - 45 - changeSlop
-                return !(orientation >= downLimit && orientation < upLimit)
-            }
         }
+
         isInitialized = true
     }
 
@@ -516,9 +519,9 @@ class Camera2Photographer : InternalPhotographer {
 
         callbackHandler?.onDeviceConfigured()
         startOpeningCamera()
-        if (orientationEventListener != null) {
-            orientationEventListener?.enable()
-        }
+//        if (orientationEventListener != null) {
+//            orientationEventListener?.enable()
+//        }
         isPreviewStarted = true
     }
 
