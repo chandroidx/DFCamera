@@ -132,7 +132,8 @@ class FocusGridView @JvmOverloads constructor(
                     for (j in 0..columnsCount) {
                         val textView = GridModeButton(
                             context,
-                            text ?: "" + (j + 1 + i * (columnsCount + 1)).toString()
+                            text ?: "" + (j + 1 + i * (columnsCount + 1)).toString(),
+                            lineColor
                         ).apply {
                             this.layoutParams = LinearLayout.LayoutParams(
                                 0,
@@ -160,9 +161,9 @@ class FocusGridView @JvmOverloads constructor(
                                     val x = location[0] + (view.width / 2)
                                     val y = location[1] + (view.height / 2)
 
-                                    it.onTouch(x.toInt(), y.toInt())
-
-                                    focusAnimation(0x80ffc800.toInt())
+                                    focusAnimation(0xffffc800.toInt()) {
+                                        it.onTouch(x.toInt(), y.toInt())
+                                    }
                                 }
                             }
                         }
