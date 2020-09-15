@@ -30,6 +30,7 @@ class FocusGridView @JvmOverloads constructor(
     val bgColor: Int? = null,
     val textColor: Int? = null,
     val text: String? = null,
+    val focusGridContentDescription: String? = null,
     val textSize: Int? = null,
     val marginTopBottom: Int? = 40,
     val dimColor: Int? = null,
@@ -166,6 +167,7 @@ class FocusGridView @JvmOverloads constructor(
                             containerFrameLayout.addView(GridModeButton(
                                 context,
                                 text ?: "" + (j + 1 + i * (columnsCount + 1)).toString(),
+                                focusGridContentDescription,
                                 lineColor
                             ).also { textView ->
                                 textView.layoutParams = FrameLayout.LayoutParams(

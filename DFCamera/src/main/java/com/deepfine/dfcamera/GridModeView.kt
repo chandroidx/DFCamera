@@ -21,6 +21,7 @@ class GridModeView @JvmOverloads constructor(
     val bgColor: Int? = null,
     val textColor: Int? = null,
     val text: String? = null,
+    val gridContentDescription: String? = null,
     val textSize: Int? = null,
     val marginTopBottom: Int? = 40,
     val dimColor: Int? = 0xAB000000.toInt()
@@ -132,6 +133,7 @@ class GridModeView @JvmOverloads constructor(
                         val textView = GridModeButton(
                             context,
                             text ?: "" + (j + 1 + i * (columnsCount + 1)).toString(),
+                            gridContentDescription,
                             lineColor,
                             bgColor!!
                         ).apply {

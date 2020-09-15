@@ -85,6 +85,7 @@ class Camera2Photographer : InternalPhotographer {
         }
 
         _mode = mode
+        preview?.focusFinished()
         restartPreview()
     }
 
@@ -121,7 +122,7 @@ class Camera2Photographer : InternalPhotographer {
             return
         }
         _autoFocus = autoFocus
-
+        preview?.focusFinished()
         if (previewRequestBuilder != null) {
             updateAutoFocus()
             updatePreview(Runnable { _autoFocus = !_autoFocus })
@@ -1529,8 +1530,10 @@ class Camera2Photographer : InternalPhotographer {
         val callBack = object : FocusHandler.Callback {
             override fun onFinish(error: Error?) {
                 updatePreview(null)
-                preview?.focusFinished()
+                // 포커싱 완료되면 사라지기 -> 계속 고정으로 변경됨.
+//                preview?.focusFinished()
                 if (error != null) {
+                    preview?.focusFinished()
                     callbackHandler?.onError(error)
                 }
             }
@@ -1666,5 +1669,9 @@ class Camera2Photographer : InternalPhotographer {
         preview?.gridModeViewOrNull?.apply {
             clearAllGrid()
         }
+    }
+
+    override fun showGridInGridMode(isShowing: Boolean) {
+        preview?.gridModeLine = isShowing
     }
 }

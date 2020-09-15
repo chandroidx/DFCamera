@@ -24,6 +24,11 @@ interface Photographer {
     fun startRecording(configurator: MediaRecorderConfigurator?)
 
     /**
+     * 그리드 모드에서 그리드 보이기 / 숨기기
+     */
+    fun showGridInGridMode(isShowing: Boolean)
+
+    /**
      * Only works when API level >= 24 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N).
      */
     fun pauseRecording()

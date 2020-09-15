@@ -2,6 +2,7 @@ package com.deepfine.camera
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -42,6 +43,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var focusGridBgColor: Int? = null
     private var focusGridTextColor: Int? = null
     private var focusGridText: String? = null
+    private var focusGridContentDescription: String? = null
     private var focusGridTextSize: Int? = null
     private var focusGridMarginTopBottom: Int? = null
     private var focusGridBackgroundImage: Drawable? = null
@@ -53,6 +55,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var gridBgColor: Int? = null
     private var gridTextColor: Int? = null
     private var gridText: String? = null
+    private var gridContentDescription: String? = null
     private var gridTextSize: Int? = null
     private var gridModeMarginTopBottom: Int? = null
     private var gridModeDimColor: Int? = null
@@ -165,6 +168,11 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
         return overlay!!.shot()
     }
 
+//    fun updateOverlay() {
+//        overlay?.postInvalidate()
+//        overlay?.invalidateCanvas()
+//    }
+
     interface Callback : AutoFitTextureView.Callback {
         fun onSingleTap(x: Int, y: Int)
         fun onScale(scaleFactor: Float)
@@ -257,6 +265,10 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             R.styleable.CameraView_gridModeText
         )
 
+        gridContentDescription = typedArray.getString(
+            R.styleable.CameraView_gridModeContentDescription
+        )
+
         gridTextSize = typedArray.getDimensionPixelSize(
             R.styleable.CameraView_gridModeTextSize,
             Utils.dpToPixel(context, 30f).toInt()
@@ -301,6 +313,10 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
 
         focusGridText = typedArray.getString(
             R.styleable.CameraView_focusGridText
+        )
+
+        focusGridContentDescription = typedArray.getString(
+            R.styleable.CameraView_focusGridContentDescription
         )
 
         focusGridTextSize = typedArray.getDimensionPixelSize(
@@ -358,6 +374,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
                         focusGridBgColor,
                         focusGridTextColor,
                         focusGridText,
+                        focusGridContentDescription,
                         focusGridTextSize,
                         focusGridMarginTopBottom,
                         focusGridDimColor,
@@ -402,6 +419,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             gridBgColor,
             gridTextColor,
             gridText,
+            gridContentDescription,
             gridTextSize,
             gridModeMarginTopBottom,
             gridModeDimColor

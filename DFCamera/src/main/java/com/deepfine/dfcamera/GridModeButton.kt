@@ -22,6 +22,7 @@ import androidx.core.content.res.ResourcesCompat
 final class GridModeButton @JvmOverloads constructor(
     @NonNull context: Context,
     private val text: String,
+    private val contentDescription: String? = null,
     private val lineColor: Int? = null,
     private val bgColor: Int = 0xCC000000.toInt()
 ) : AppCompatTextView(context) {
@@ -40,6 +41,9 @@ final class GridModeButton @JvmOverloads constructor(
 
     init {
         showButtonAttrs(true)
+        contentDescription?.let {
+            this.setContentDescription(text+it)
+        }
     }
 
 

@@ -1,16 +1,20 @@
 package com.deepfine.dfcamerademo;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -324,31 +328,46 @@ public class PhotographerActivity extends AppCompatActivity {
             public void draw(Canvas canvas, Point point, Paint[] paints) {
                 if (paints == null || paints.length == 0) return;
 
-                float left = point.x - (SIZE / 2);
-                float top = point.y - (SIZE / 2);
-                float right = point.x + (SIZE / 2);
-                float bottom = point.y + (SIZE / 2);
+//                Float density = getResources().getDisplayMetrics().density;
+//                ValueAnimator animator = ValueAnimator.ofFloat(0, 10 * density);
+//                animator.setDuration(500);
+//                animator.setInterpolator(new DecelerateInterpolator());
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+//
+//                        float value = (float) animation.getAnimatedValue();
+                float value = 0;
+                        float left = point.x - (SIZE / 2);
+                        float top = point.y - (SIZE / 2);
+                        float right = point.x + (SIZE / 2);
+                        float bottom = point.y + (SIZE / 2);
 
-                Paint paint = paints[0];
+                        Paint paint = paints[0];
 
-                Path path = new Path();
-                path.moveTo(left, top+LINE_LENGTH);
-                path.lineTo(left, top);
-                path.lineTo(left + LINE_LENGTH, top);
+                        Path path = new Path();
+                        path.moveTo(left - value, top + LINE_LENGTH);
+                        path.lineTo(left - value, top - value);
+                        path.lineTo(left + LINE_LENGTH, top - value);
 
-                path.moveTo(right - LINE_LENGTH, top);
-                path.lineTo(right, top);
-                path.lineTo(right, top + LINE_LENGTH);
+                        path.moveTo(right - LINE_LENGTH, top - value);
+                        path.lineTo(right + value, top - value);
+                        path.lineTo(right + value, top + LINE_LENGTH);
 
-                path.moveTo(right, bottom - LINE_LENGTH);
-                path.lineTo(right, bottom);
-                path.lineTo(right - LINE_LENGTH, bottom);
+                        path.moveTo(right + value, bottom - LINE_LENGTH);
+                        path.lineTo(right + value, bottom + value);
+                        path.lineTo(right - LINE_LENGTH, bottom + value);
 
-                path.moveTo(left + LINE_LENGTH, bottom);
-                path.lineTo(left, bottom);
-                path.lineTo(left, bottom - LINE_LENGTH);
+                        path.moveTo(left + LINE_LENGTH, bottom + value);
+                        path.lineTo(left - value, bottom + value);
+                        path.lineTo(left - value, bottom - LINE_LENGTH);
 
-                canvas.drawPath(path, paint);
+                        canvas.drawPath(path, paint);
+//                        preview.updateOverlay(canvas);
+//                    }
+//                });
+//                animator.start();
             }
         });
         photographer = PhotographerFactory.createPhotographerWithCamera2(this, preview);

@@ -11,6 +11,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.animation.DecelerateInterpolator
 
+
 internal class CameraViewOverlay @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
@@ -19,7 +20,6 @@ internal class CameraViewOverlay @JvmOverloads constructor(
     private var focusPoint: Point? = null
     private var canvasDrawer: CanvasDrawer? = null
     private var paints: Array<Paint>? = null
-    private var grid: GridModeView? = null
     fun setCanvasDrawer(drawer: CanvasDrawer) {
         canvasDrawer = drawer
         paints = drawer.initPaints()

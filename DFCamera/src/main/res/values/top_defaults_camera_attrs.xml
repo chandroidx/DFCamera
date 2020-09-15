@@ -36,6 +36,7 @@
         <attr name="gridModeBgColor" format="color"/>
         <attr name="gridModeTextColor" format="color"/>
         <attr name="gridModeText" format="string"/>
+        <attr name="gridModeContentDescription" format="string"/>
         <attr name="gridModeTextSize" format="dimension"/>
         <attr name="gridModeMarginTopBottom" format="dimension"/>
         <attr name="gridModeDimColor" format="color"/>
@@ -44,6 +45,7 @@
         <attr name="focusGridLineColor" format="color"/>
         <attr name="focusGridTextColor" format="color"/>
         <attr name="focusGridText" format="string"/>
+        <attr name="focusGridContentDescription" format="string"/>
         <attr name="focusGridTextSize" format="dimension"/>
         <attr name="focusGridBgColor" format="color"/>
         <attr name="focusGridMarginTopBottom" format="dimension"/>
