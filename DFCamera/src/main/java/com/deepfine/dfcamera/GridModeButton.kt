@@ -22,7 +22,7 @@ import androidx.core.content.res.ResourcesCompat
 final class GridModeButton @JvmOverloads constructor(
     @NonNull context: Context,
     private val text: String,
-    private val lineColor: Int? = 0x000000,
+    private val lineColor: Int? = null,
     private val bgColor: Int = 0xCC000000.toInt()
 ) : AppCompatTextView(context) {
     private val density = (resources.displayMetrics.density).toInt()

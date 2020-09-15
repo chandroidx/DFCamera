@@ -4,6 +4,7 @@ import android.Manifest;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -302,17 +303,20 @@ public class PhotographerActivity extends AppCompatActivity {
 
     private void initView(Boolean isGranted) {
         if (!isGranted) { return; }
+        Float desnity = getResources().getDisplayMetrics().density;
 
         preview.setFocusIndicatorDrawer(new CanvasDrawer() {
-            private static final int SIZE = 300;
-            private static final int LINE_LENGTH = 50;
+            private final float SIZE = (80 * desnity);
+            private final float LINE_LENGTH = (30 * desnity);
+            private final float LINE_WIDTH =  (6 * desnity);
 
             @Override
             public Paint[] initPaints() {
+
                 Paint focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 focusPaint.setStyle(Paint.Style.STROKE);
-                focusPaint.setStrokeWidth(2);
-                focusPaint.setColor(Color.WHITE);
+                focusPaint.setStrokeWidth(LINE_WIDTH);
+                focusPaint.setColor(0x80d8d8d8);
                 return new Paint[]{ focusPaint };
             }
 
@@ -320,24 +324,31 @@ public class PhotographerActivity extends AppCompatActivity {
             public void draw(Canvas canvas, Point point, Paint[] paints) {
                 if (paints == null || paints.length == 0) return;
 
-                int left = point.x - (SIZE / 2);
-                int top = point.y - (SIZE / 2);
-                int right = point.x + (SIZE / 2);
-                int bottom = point.y + (SIZE / 2);
+                float left = point.x - (SIZE / 2);
+                float top = point.y - (SIZE / 2);
+                float right = point.x + (SIZE / 2);
+                float bottom = point.y + (SIZE / 2);
 
                 Paint paint = paints[0];
 
-                canvas.drawLine(left, top + LINE_LENGTH, left, top, paint);
-                canvas.drawLine(left, top, left + LINE_LENGTH, top, paint);
+                Path path = new Path();
+                path.moveTo(left, top+LINE_LENGTH);
+                path.lineTo(left, top);
+                path.lineTo(left + LINE_LENGTH, top);
 
-                canvas.drawLine(right - LINE_LENGTH, top, right, top, paint);
-                canvas.drawLine(right, top, right, top + LINE_LENGTH, paint);
+                path.moveTo(right - LINE_LENGTH, top);
+                path.lineTo(right, top);
+                path.lineTo(right, top + LINE_LENGTH);
 
-                canvas.drawLine(right, bottom - LINE_LENGTH, right, bottom, paint);
-                canvas.drawLine(right, bottom, right - LINE_LENGTH, bottom, paint);
+                path.moveTo(right, bottom - LINE_LENGTH);
+                path.lineTo(right, bottom);
+                path.lineTo(right - LINE_LENGTH, bottom);
 
-                canvas.drawLine(left + LINE_LENGTH, bottom, left, bottom, paint);
-                canvas.drawLine(left, bottom, left, bottom - LINE_LENGTH, paint);
+                path.moveTo(left + LINE_LENGTH, bottom);
+                path.lineTo(left, bottom);
+                path.lineTo(left, bottom - LINE_LENGTH);
+
+                canvas.drawPath(path, paint);
             }
         });
         photographer = PhotographerFactory.createPhotographerWithCamera2(this, preview);

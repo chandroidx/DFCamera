@@ -10,43 +10,33 @@
         android:id="@+id/blank_top"
         android:background="@color/design_default_color_primary_dark"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/container"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="78dp"
         android:visibility="invisible"
-        android:layout_weight="1"/>
+        android:layout_weight="0"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="0">
+        android:layout_weight="1">
         <view
             android:id="@+id/blank_left"
             android:background="@color/design_default_color_primary_dark"
-            android:layout_width="0dp"
+            android:layout_width="78dp"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/blank_top"
-            app:layout_constraintBottom_toTopOf="@+id/blank_bottom"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/container"
-            app:layout_constraintHorizontal_weight="1"
-            android:visibility="invisible"
-            android:layout_weight="1"/>
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:id="@+id/container"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/blank_top"
             app:layout_constraintLeft_toRightOf="@+id/blank_left"
             app:layout_constraintRight_toLeftOf="@+id/blank_right"
             app:layout_constraintBottom_toTopOf="@+id/blank_bottom"
-            android:layout_weight="0">
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +46,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -64,8 +54,30 @@
                     android:textColor="@android:color/black"
                     android:textSize="30dp" />
 
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/bg_dim"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_margin="0dp"
+                        android:layout_weight="1"
+                        android:text="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="30dp" />
+                </FrameLayout>
+
+
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
@@ -75,7 +87,7 @@
                     android:textSize="30dp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
@@ -85,17 +97,7 @@
                     android:textSize="30dp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_margin="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="1"
-                    android:textColor="@android:color/black"
-                    android:textSize="30dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
@@ -217,28 +219,22 @@
         <view
             android:id="@+id/blank_right"
             android:background="@color/design_default_color_primary_dark"
-            android:layout_width="0dp"
+            android:layout_width="78dp"
             android:layout_height="match_parent"
             android:layout_alignRight="@+id/container"
-            app:layout_constraintTop_toBottomOf="@+id/blank_top"
-            app:layout_constraintBottom_toTopOf="@+id/blank_bottom"
-            app:layout_constraintLeft_toRightOf="@+id/container"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            android:visibility="invisible"
-            android:layout_weight="1"/>
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <view
         android:id="@+id/blank_bottom"
         android:background="@color/design_default_color_primary_dark"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="78dp"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_weight="1"/>
+        android:layout_weight="0"/>
 
 </LinearLayout>

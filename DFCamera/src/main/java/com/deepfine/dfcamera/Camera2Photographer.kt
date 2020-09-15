@@ -1541,9 +1541,10 @@ class Camera2Photographer : InternalPhotographer {
             focusRect, callBack)
 
         // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분 주석 - 스마트 글래스는 다르게 표시
-        if (!isSmartGlasses) {
+        //test
+//        if (!isSmartGlasses) {
             preview?.focusRequestAt(x, y)
-        }
+//        }
     }
 
     /**

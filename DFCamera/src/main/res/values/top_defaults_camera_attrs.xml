@@ -39,6 +39,18 @@
         <attr name="gridModeTextSize" format="dimension"/>
         <attr name="gridModeMarginTopBottom" format="dimension"/>
         <attr name="gridModeDimColor" format="color"/>
+
+        <attr name="focusGridDimColor" format="color"/>
+        <attr name="focusGridLineColor" format="color"/>
+        <attr name="focusGridTextColor" format="color"/>
+        <attr name="focusGridText" format="string"/>
+        <attr name="focusGridTextSize" format="dimension"/>
+        <attr name="focusGridBgColor" format="color"/>
+        <attr name="focusGridMarginTopBottom" format="dimension"/>
+        <attr name="focusGridBackgroundImage" format="reference"/>
+        <attr name="focusGridBackgroundWidth" format="dimension"/>
+        <attr name="focusGridBackgroundHeight" format="dimension"/>
+
     </declare-styleable>
     <item name="textureView" type="id"/>
 </resources>

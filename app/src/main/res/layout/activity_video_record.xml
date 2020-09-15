@@ -21,6 +21,12 @@
         app:isSmartGlasses="true"
         app:gridModeLineColor="@android:color/white"
         app:gridModeMarginTopBottom="78dp"
+        app:focusGridBackgroundImage="@drawable/bg_dim"
+        app:focusGridBackgroundWidth="46dp"
+        app:focusGridBackgroundHeight="46dp"
+        app:focusGridMarginTopBottom="78dp"
+        app:focusGridTextSize="26dp"
+        app:focusGridTextColor="@android:color/white"
         app:showFocusIndicator="true" />
 
     <ImageButton

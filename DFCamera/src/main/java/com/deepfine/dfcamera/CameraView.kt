@@ -2,6 +2,7 @@ package com.deepfine.camera
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
@@ -36,6 +37,17 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var grid: Int
     private var gridLayout: GridLinesLayout? = null
     private var focusGridView: FocusGridView? = null
+    private var focusGridDimColor: Int? = null
+    private var focusGridLineColor: Int? = null
+    private var focusGridBgColor: Int? = null
+    private var focusGridTextColor: Int? = null
+    private var focusGridText: String? = null
+    private var focusGridTextSize: Int? = null
+    private var focusGridMarginTopBottom: Int? = null
+    private var focusGridBackgroundImage: Drawable? = null
+    private var focusGridBackgroundWidth: Int? = null
+    private var focusGridBackgroundHeight: Int? = null
+
     private var gridModeView: GridModeView? = null
     private var gridLineColor: Int? = null
     private var gridBgColor: Int? = null
@@ -270,6 +282,64 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             0xAB000000.toInt()
         )
 
+        focusGridDimColor = typedArray.getColor(
+            R.styleable.CameraView_focusGridDimColor,
+            0x00000000.toInt()
+        )
+
+        focusGridLineColor = typedArray.getColor(
+            R.styleable.CameraView_focusGridLineColor,
+            0x00000000.toInt()
+        )
+
+
+        /////
+        focusGridTextColor = typedArray.getColor(
+            R.styleable.CameraView_focusGridTextColor,
+            blackColor
+        )
+
+        focusGridText = typedArray.getString(
+            R.styleable.CameraView_focusGridText
+        )
+
+        focusGridTextSize = typedArray.getDimensionPixelSize(
+            R.styleable.CameraView_focusGridTextSize,
+            Utils.dpToPixel(context, 30f).toInt()
+        )
+
+        focusGridBgColor = typedArray.getColor(
+            R.styleable.CameraView_focusGridBgColor,
+            0x00000000.toInt()
+        )
+
+        focusGridMarginTopBottom = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            typedArray.getDimensionPixelSize(R.styleable.CameraView_focusGridMarginTopBottom, Utils.dpToPixel(context, 40f).toInt())
+                .toFloat(),
+            resources.displayMetrics
+        ).toInt()
+
+
+        focusGridBackgroundImage = typedArray.getDrawable(
+            R.styleable.CameraView_focusGridBackgroundImage
+        )
+
+        focusGridBackgroundWidth = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            typedArray.getDimensionPixelSize(R.styleable.CameraView_focusGridBackgroundWidth, Utils.dpToPixel(context, 0f).toInt())
+                .toFloat(),
+            resources.displayMetrics
+        ).toInt()
+
+        focusGridBackgroundHeight = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            typedArray.getDimensionPixelSize(R.styleable.CameraView_focusGridBackgroundHeight, Utils.dpToPixel(context, 0f).toInt())
+                .toFloat(),
+            resources.displayMetrics
+        ).toInt()
+
+
         val fillSpace =
             typedArray.getBoolean(R.styleable.CameraView_fillSpace, false)
         textureView.fillSpace = fillSpace
@@ -284,13 +354,16 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
                 // 포커
                 focusGridView = FocusGridView(context,
                     null,
-                        gridLineColor,
-                        gridBgColor,
-                        gridTextColor,
-                        gridText,
-                        gridTextSize,
-                        gridModeMarginTopBottom,
-                        gridModeDimColor)
+                        focusGridLineColor,
+                        focusGridBgColor,
+                        focusGridTextColor,
+                        focusGridText,
+                        focusGridTextSize,
+                        focusGridMarginTopBottom,
+                        focusGridDimColor,
+                        focusGridBackgroundImage,
+                        focusGridBackgroundWidth,
+                        focusGridBackgroundHeight)
                 val gridViewParams = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT

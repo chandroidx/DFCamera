@@ -74,7 +74,7 @@ class GridModeView @JvmOverloads constructor(
                 hiddenViewList.add(it.id)
 
                 it.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,0,1f
+                    LinearLayout.LayoutParams.MATCH_PARENT,marginTopBottom!!,0f
                 )
 
                 it.setBackgroundColor(dimColor!!)
@@ -84,7 +84,7 @@ class GridModeView @JvmOverloads constructor(
 
             addView(LinearLayout(context).also {
                 it.layoutParams = LinearLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT,0f
+                    LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT,1f
                 )
                 it.orientation = LinearLayout.HORIZONTAL
 
@@ -93,7 +93,7 @@ class GridModeView @JvmOverloads constructor(
                     hiddenViewList.add(view.id)
 
                     view.layoutParams = LinearLayout.LayoutParams(
-                        0,FrameLayout.LayoutParams.MATCH_PARENT,1f
+                        marginTopBottom!!,FrameLayout.LayoutParams.MATCH_PARENT,0f
                     )
 
                     view.setBackgroundColor(dimColor!!)
@@ -103,17 +103,17 @@ class GridModeView @JvmOverloads constructor(
                 // 중앙 그리드 뷰
                 val metrics = resources.displayMetrics
 
-                val contentsHeight: Int = if (metrics.heightPixels > metrics.widthPixels) {
-                    (metrics.widthPixels - marginTopBottom!! * 2) / (columnsCount + 1)
-                } else {
-                    (metrics.heightPixels - marginTopBottom!! * 2) / (lineCount + 1)
-                }.toInt()
+//                val contentsHeight: Int = if (metrics.heightPixels > metrics.widthPixels) {
+//                    (metrics.widthPixels - marginTopBottom!! * 2) / (columnsCount + 1)
+//                } else {
+//                    (metrics.heightPixels - marginTopBottom!! * 2) / (lineCount + 1)
+//                }.toInt()
 
                 val container: LinearLayout = LinearLayout(context).apply {
                     layoutParams = LinearLayout.LayoutParams(
-                        (contentsHeight * (columnsCount + 1)),
-                        (contentsHeight * (lineCount + 1)),
-                        0f
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1f
                     )
 
                     orientation = LinearLayout.VERTICAL
@@ -190,7 +190,7 @@ class GridModeView @JvmOverloads constructor(
                     hiddenViewList.add(view.id)
 
                     view.layoutParams = LinearLayout.LayoutParams(
-                        0,LinearLayout.LayoutParams.MATCH_PARENT,1f
+                        marginTopBottom!!,LinearLayout.LayoutParams.MATCH_PARENT,0f
                     )
 
                     view.setBackgroundColor(dimColor!!)
@@ -203,7 +203,7 @@ class GridModeView @JvmOverloads constructor(
                 hiddenViewList.add(it.id)
 
                 it.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,0,1f
+                    LinearLayout.LayoutParams.MATCH_PARENT,marginTopBottom!!,0f
                 )
 
                 it.setBackgroundColor(dimColor!!)
