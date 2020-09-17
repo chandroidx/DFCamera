@@ -6,9 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.ImageFormat
-import android.graphics.Rect
-import android.graphics.SurfaceTexture
+import android.graphics.*
 import android.hardware.camera2.*
 import android.hardware.camera2.CameraCaptureSession.CaptureCallback
 import android.hardware.camera2.params.StreamConfigurationMap
@@ -123,6 +121,7 @@ class Camera2Photographer : InternalPhotographer {
         }
         _autoFocus = autoFocus
         preview?.focusFinished()
+
         if (previewRequestBuilder != null) {
             updateAutoFocus()
             updatePreview(Runnable { _autoFocus = !_autoFocus })
@@ -1530,8 +1529,11 @@ class Camera2Photographer : InternalPhotographer {
         val callBack = object : FocusHandler.Callback {
             override fun onFinish(error: Error?) {
                 updatePreview(null)
+
                 // 포커싱 완료되면 사라지기 -> 계속 고정으로 변경됨.
 //                preview?.focusFinished()
+                preview?.focusCompleted()
+
                 if (error != null) {
                     preview?.focusFinished()
                     callbackHandler?.onError(error)
@@ -1539,15 +1541,14 @@ class Camera2Photographer : InternalPhotographer {
             }
         }
 
+
+
         focusHandler.focus(
             captureSession, previewRequestBuilder,
             focusRect, callBack)
 
         // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분 주석 - 스마트 글래스는 다르게 표시
-        //test
-//        if (!isSmartGlasses) {
-            preview?.focusRequestAt(x, y)
-//        }
+        preview?.focusRequestAt(x, y)
     }
 
     /**

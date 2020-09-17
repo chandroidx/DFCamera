@@ -9,10 +9,14 @@ import android.util.TypedValue
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import com.deepfine.camera.CanvasDrawer.DefaultCanvasDrawer
+import com.deepfine.dfcamera.FocusDefaultMarker
+import com.deepfine.dfcamera.FocusMarker
+import com.deepfine.dfcamera.FocusMarkerLayout
 import com.deepfine.dfcamera.R
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,7 +53,6 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var focusGridBackgroundImage: Drawable? = null
     private var focusGridBackgroundWidth: Int? = null
     private var focusGridBackgroundHeight: Int? = null
-
     private var gridModeView: GridModeView? = null
     private var gridLineColor: Int? = null
     private var gridBgColor: Int? = null
@@ -131,6 +134,8 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             return if (gridModeLine) gridModeView!! else null
         }
 
+    var focusMarkerLayout: FocusMarkerLayout? = null
+    var marker: FocusMarker? = null
 
     fun setPinchToZoom(pinchToZoom: Boolean) {
         this.pinchToZoom = pinchToZoom
@@ -151,17 +156,25 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
 
 
 
-    fun setFocusIndicatorDrawer(drawer: CanvasDrawer) {
-        overlay!!.setCanvasDrawer(drawer)
-    }
+//    fun setFocusIndicatorDrawer(drawer: CanvasDrawer) {
+//        overlay!!.setCanvasDrawer(drawer)
+//    }
 
     // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분
     fun focusRequestAt(x: Int, y: Int) {
-        overlay!!.focusRequestAt(x, y)
+        focusMarkerLayout?.onEvent(x, y)
+        marker?.onAutoFocusStart()
+
+//        overlay!!.focusRequestAt(x, y)
+    }
+
+    fun focusCompleted() {
+        marker?.onAutoFocusEnd(true)
     }
 
     fun focusFinished() {
-        overlay!!.focusFinished()
+//        overlay!!.focusFinished()
+        marker?.clear()
     }
 
     fun shot() {
@@ -439,9 +452,22 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
             }
         }
 
+
+
+
+
         addOverlay()
         if (showFocusIndicator) {
-            setFocusIndicatorDrawer(DefaultCanvasDrawer())
+//            setFocusIndicatorDrawer(DefaultCanvasDrawer())
+            focusMarkerLayout = FocusMarkerLayout(context).also {
+                LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                marker = FocusDefaultMarker()
+                it.onMarker(marker)
+                addView(it)
+            }
         }
         displayOrientationDetector = object : DisplayOrientationDetector(context) {
             public override fun onDisplayOrientationChanged(displayOrientation: Int) {

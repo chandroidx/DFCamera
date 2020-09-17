@@ -309,67 +309,67 @@ public class PhotographerActivity extends AppCompatActivity {
         if (!isGranted) { return; }
         Float desnity = getResources().getDisplayMetrics().density;
 
-        preview.setFocusIndicatorDrawer(new CanvasDrawer() {
-            private final float SIZE = (80 * desnity);
-            private final float LINE_LENGTH = (30 * desnity);
-            private final float LINE_WIDTH =  (6 * desnity);
-
-            @Override
-            public Paint[] initPaints() {
-
-                Paint focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                focusPaint.setStyle(Paint.Style.STROKE);
-                focusPaint.setStrokeWidth(LINE_WIDTH);
-                focusPaint.setColor(0x80d8d8d8);
-                return new Paint[]{ focusPaint };
-            }
-
-            @Override
-            public void draw(Canvas canvas, Point point, Paint[] paints) {
-                if (paints == null || paints.length == 0) return;
-
-//                Float density = getResources().getDisplayMetrics().density;
-//                ValueAnimator animator = ValueAnimator.ofFloat(0, 10 * density);
-//                animator.setDuration(500);
-//                animator.setInterpolator(new DecelerateInterpolator());
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+//        preview.setFocusIndicatorDrawer(new CanvasDrawer() {
+//            private final float SIZE = (80 * desnity);
+//            private final float LINE_LENGTH = (30 * desnity);
+//            private final float LINE_WIDTH =  (6 * desnity);
 //
-//                        float value = (float) animation.getAnimatedValue();
-                float value = 0;
-                        float left = point.x - (SIZE / 2);
-                        float top = point.y - (SIZE / 2);
-                        float right = point.x + (SIZE / 2);
-                        float bottom = point.y + (SIZE / 2);
-
-                        Paint paint = paints[0];
-
-                        Path path = new Path();
-                        path.moveTo(left - value, top + LINE_LENGTH);
-                        path.lineTo(left - value, top - value);
-                        path.lineTo(left + LINE_LENGTH, top - value);
-
-                        path.moveTo(right - LINE_LENGTH, top - value);
-                        path.lineTo(right + value, top - value);
-                        path.lineTo(right + value, top + LINE_LENGTH);
-
-                        path.moveTo(right + value, bottom - LINE_LENGTH);
-                        path.lineTo(right + value, bottom + value);
-                        path.lineTo(right - LINE_LENGTH, bottom + value);
-
-                        path.moveTo(left + LINE_LENGTH, bottom + value);
-                        path.lineTo(left - value, bottom + value);
-                        path.lineTo(left - value, bottom - LINE_LENGTH);
-
-                        canvas.drawPath(path, paint);
-//                        preview.updateOverlay(canvas);
-//                    }
-//                });
-//                animator.start();
-            }
-        });
+//            @Override
+//            public Paint[] initPaints() {
+//
+//                Paint focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//                focusPaint.setStyle(Paint.Style.STROKE);
+//                focusPaint.setStrokeWidth(LINE_WIDTH);
+//                focusPaint.setColor(0x80d8d8d8);
+//                return new Paint[]{ focusPaint };
+//            }
+//
+//            @Override
+//            public void draw(Canvas canvas, Point point, Paint[] paints) {
+//                if (paints == null || paints.length == 0) return;
+//
+////                Float density = getResources().getDisplayMetrics().density;
+////                ValueAnimator animator = ValueAnimator.ofFloat(0, 10 * density);
+////                animator.setDuration(500);
+////                animator.setInterpolator(new DecelerateInterpolator());
+////                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+////                    @Override
+////                    public void onAnimationUpdate(ValueAnimator animation) {
+////                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+////
+////                        float value = (float) animation.getAnimatedValue();
+//                float value = 0;
+//                        float left = point.x - (SIZE / 2);
+//                        float top = point.y - (SIZE / 2);
+//                        float right = point.x + (SIZE / 2);
+//                        float bottom = point.y + (SIZE / 2);
+//
+//                        Paint paint = paints[0];
+//
+//                        Path path = new Path();
+//                        path.moveTo(left - value, top + LINE_LENGTH);
+//                        path.lineTo(left - value, top - value);
+//                        path.lineTo(left + LINE_LENGTH, top - value);
+//
+//                        path.moveTo(right - LINE_LENGTH, top - value);
+//                        path.lineTo(right + value, top - value);
+//                        path.lineTo(right + value, top + LINE_LENGTH);
+//
+//                        path.moveTo(right + value, bottom - LINE_LENGTH);
+//                        path.lineTo(right + value, bottom + value);
+//                        path.lineTo(right - LINE_LENGTH, bottom + value);
+//
+//                        path.moveTo(left + LINE_LENGTH, bottom + value);
+//                        path.lineTo(left - value, bottom + value);
+//                        path.lineTo(left - value, bottom - LINE_LENGTH);
+//
+//                        canvas.drawPath(path, paint);
+////                        preview.updateOverlay(canvas);
+////                    }
+////                });
+////                animator.start();
+//            }
+//        });
         photographer = PhotographerFactory.createPhotographerWithCamera2(this, preview);
         photographerHelper = new PhotographerHelper(photographer);
         photographerHelper.setFileDir(Commons.MEDIA_DIR);

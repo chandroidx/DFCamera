@@ -17,49 +17,49 @@ internal class CameraViewOverlay @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : SurfaceView(context, attrs, defStyleAttr) {
-    private var focusPoint: Point? = null
-    private var canvasDrawer: CanvasDrawer? = null
-    private var paints: Array<Paint>? = null
-    fun setCanvasDrawer(drawer: CanvasDrawer) {
-        canvasDrawer = drawer
-        paints = drawer.initPaints()
-    }
+//    private var focusPoint: Point? = null
+//    private var canvasDrawer: CanvasDrawer? = null
+//    private var paints: Array<Paint>? = null
+//    fun setCanvasDrawer(drawer: CanvasDrawer) {
+//        canvasDrawer = drawer
+//        paints = drawer.initPaints()
+//    }
 
     // 포커싱 되는 영역에 Overlay로 drawIndicator하는 부분
-    fun focusRequestAt(x: Int, y: Int) {
-        if (x >= 0 && x <= measuredWidth && y >= 0 && y <= measuredHeight) {
-            focusPoint = Point(x, y)
-        }
-        drawIndicator()
-    }
+//    fun focusRequestAt(x: Int, y: Int) {
+//        if (x >= 0 && x <= measuredWidth && y >= 0 && y <= measuredHeight) {
+//            focusPoint = Point(x, y)
+//        }
+//        drawIndicator()
+//    }
+//
+//    fun focusFinished() {
+//        focusPoint = null
+//        postDelayed({ this.clear() }, 300)
+//    }
+//
+//    private fun drawIndicator() {
+//        invalidate()
+//        if (holder.surface.isValid) {
+//            val canvas = holder.lockCanvas()
+//            if (canvas != null) {
+//                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+//                canvas.drawColor(Color.TRANSPARENT)
+//                if (canvasDrawer != null) {
+//                    canvasDrawer!!.draw(canvas, focusPoint, paints)
+//                }
+//                holder.unlockCanvasAndPost(canvas)
+//            }
+//        }
+//    }
 
-    fun focusFinished() {
-        focusPoint = null
-        postDelayed({ this.clear() }, 300)
-    }
-
-    private fun drawIndicator() {
-        invalidate()
-        if (holder.surface.isValid) {
-            val canvas = holder.lockCanvas()
-            if (canvas != null) {
-                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-                canvas.drawColor(Color.TRANSPARENT)
-                if (canvasDrawer != null) {
-                    canvasDrawer!!.draw(canvas, focusPoint, paints)
-                }
-                holder.unlockCanvasAndPost(canvas)
-            }
-        }
-    }
-
-    private fun clear() {
-        val canvas = holder.lockCanvas()
-        if (canvas != null) {
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-            holder.unlockCanvasAndPost(canvas)
-        }
-    }
+//    private fun clear() {
+//        val canvas = holder.lockCanvas()
+//        if (canvas != null) {
+//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+//            holder.unlockCanvasAndPost(canvas)
+//        }
+//    }
 
     fun shot() {
         val colorFrom = Color.TRANSPARENT
@@ -93,22 +93,22 @@ internal class CameraViewOverlay @JvmOverloads constructor(
 
     init {
         setZOrderOnTop(true)
-        holder.setFormat(PixelFormat.TRANSPARENT)
-        holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                clear()
-            }
-
-            override fun surfaceChanged(
-                holder: SurfaceHolder,
-                format: Int,
-                width: Int,
-                height: Int
-            ) {
-                clear()
-            }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder) {}
-        })
+//        holder.setFormat(PixelFormat.TRANSPARENT)
+//        holder.addCallback(object : SurfaceHolder.Callback {
+//            override fun surfaceCreated(holder: SurfaceHolder) {
+//                clear()
+//            }
+//
+//            override fun surfaceChanged(
+//                holder: SurfaceHolder,
+//                format: Int,
+//                width: Int,
+//                height: Int
+//            ) {
+//                clear()
+//            }
+//
+//            override fun surfaceDestroyed(holder: SurfaceHolder) {}
+//        })
     }
 }
