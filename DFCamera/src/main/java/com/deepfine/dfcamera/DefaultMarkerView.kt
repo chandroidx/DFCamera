@@ -2,6 +2,7 @@ package com.deepfine.dfcamera
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
@@ -25,6 +26,7 @@ final class DefaultMarkerView constructor(
     private val value: Float = 0f
     ): View(context) {
 
+
     private val paint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).also{ paint ->
             paint.style = Paint.Style.STROKE
@@ -34,27 +36,28 @@ final class DefaultMarkerView constructor(
     }
 
     private val path: Path by lazy {
-        val left: Float = 0f
-        val top: Float = 0f
-        val right: Float = sizeWidth
-        val bottom: Float = sizeHeight
+        val initPoint = strokeWidth / 2
+        val left: Float = initPoint
+        val top: Float = initPoint
+        val right: Float = sizeWidth - initPoint
+        val bottom: Float = sizeHeight - initPoint
 
         Path().apply {
-            this.moveTo(left - value, top + lineLength)
-            this.lineTo(left - value, top - value)
-            this.lineTo(left + lineLength, top - value)
+            this.moveTo(left, top + lineLength)
+            this.lineTo(left, top)
+            this.lineTo(left + lineLength, top)
 
-            this.moveTo(right - lineLength, top - value)
-            this.lineTo(right + value, top - value)
-            this.lineTo(right + value, top + lineLength)
+            this.moveTo(right - lineLength, top)
+            this.lineTo(right, top - value)
+            this.lineTo(right, top + lineLength)
 
-            this.moveTo(right + value, bottom - lineLength)
-            this.lineTo(right + value, bottom + value)
-            this.lineTo(right - lineLength, bottom + value)
+            this.moveTo(right, bottom - lineLength)
+            this.lineTo(right, bottom)
+            this.lineTo(right - lineLength, bottom)
 
-            this.moveTo(left + lineLength, bottom + value)
-            this.lineTo(left - value, bottom + value)
-            this.lineTo(left - value, bottom - lineLength)
+            this.moveTo(left + lineLength, bottom)
+            this.lineTo(left, bottom)
+            this.lineTo(left, bottom - lineLength)
         }
     }
 
