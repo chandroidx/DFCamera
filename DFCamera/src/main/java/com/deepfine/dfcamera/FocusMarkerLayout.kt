@@ -34,6 +34,7 @@ final class FocusMarkerLayout constructor(
             mViews = it
             addView(it)
         }
+        this.alpha  = 0f
     }
 
     /**
