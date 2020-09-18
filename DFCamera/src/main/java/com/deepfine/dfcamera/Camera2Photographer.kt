@@ -75,6 +75,7 @@ class Camera2Photographer : InternalPhotographer {
         if (_mode == mode) return
 
         preview?.focusGrid = Grid.OFF
+        preview?.focusFinished()
         if (_mode != Values.MODE_VIDEO && mode != Values.MODE_VIDEO) {
             preview?.gridModeLine = mode == Values.MODE_GRID
             _mode = mode
@@ -83,7 +84,6 @@ class Camera2Photographer : InternalPhotographer {
         }
 
         _mode = mode
-        preview?.focusFinished()
         restartPreview()
     }
 
@@ -222,6 +222,11 @@ class Camera2Photographer : InternalPhotographer {
         _zoom = newZoom
         updateZoom(newZoom)
         updatePreview(null)
+    }
+
+    override var focusGrid: Grid = Grid.OFF
+    set(grid)  {
+        preview?.focusGrid = grid
     }
 
     private val displayOrientation: Int
@@ -1194,6 +1199,8 @@ class Camera2Photographer : InternalPhotographer {
                     updatePreview(null)
                     isRecordingVideo = true
                     mediaRecorder?.start()
+
+
                     callbackHandler?.onStartRecording()
                 }
 

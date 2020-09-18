@@ -23,6 +23,9 @@ interface Photographer {
     fun takePicture()
     fun startRecording(configurator: MediaRecorderConfigurator?)
 
+    // 포커스 그리드 컨트롤
+    var focusGrid: Grid
+
     /**
      * 그리드 모드에서 그리드 보이기 / 숨기기
      */
@@ -41,6 +44,8 @@ interface Photographer {
 
     // 그리드 모드 초기화
     fun clearAllGrid()
+
+
 
     interface MediaRecorderConfigurator {
         /**
