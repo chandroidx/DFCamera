@@ -321,7 +321,6 @@ class Camera2Photographer : InternalPhotographer {
                 captureSession = session
                 updateAutoFocus()
                 updateFlash()
-//                updateGrid()
                 updateExposure(exposure)
                 applyZoom()
                 updatePreview(null)
@@ -1681,5 +1680,14 @@ class Camera2Photographer : InternalPhotographer {
 
     override fun showGridInGridMode(isShowing: Boolean) {
         preview?.gridModeLine = isShowing
+    }
+
+    override fun initSetting(autoFocus: Boolean, stateFlash: Int, zoomLevel: Float, exposure: Float?) {
+        _autoFocus = autoFocus
+        _flash = stateFlash
+        _zoom = zoomLevel
+        exposure?.let {
+            _exposure = it
+        }
     }
 }

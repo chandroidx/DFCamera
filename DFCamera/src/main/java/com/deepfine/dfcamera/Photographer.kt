@@ -45,6 +45,8 @@ interface Photographer {
     // 그리드 모드 초기화
     fun clearAllGrid()
 
+    // 설정 초기화
+    fun initSetting(autoFocus: Boolean, stateFlash: Int, zoomLevel: Float, exposure: Float? = null)
 
 
     interface MediaRecorderConfigurator {
