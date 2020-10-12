@@ -14,6 +14,9 @@ import android.view.TextureView
 import androidx.annotation.ColorInt
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.regex.Pattern
 
@@ -177,7 +180,10 @@ object Utils {
                 )
             }
         }
-        return dir.absolutePath + "/" + System.currentTimeMillis() + fileSuffix
+        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
+        val currentDate = sdf.format(Date())
+
+        return dir.absolutePath + "/" + currentDate + fileSuffix
     }
 
     fun checkFloatEqual(a: Float, b: Float): Boolean {
