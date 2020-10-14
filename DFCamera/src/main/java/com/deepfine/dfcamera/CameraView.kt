@@ -40,6 +40,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private val isSmartGlasses: Boolean
     private val exposure: Float
     private var grid: Int
+    private var videoFrame: Int
     private var gridLayout: GridLinesLayout? = null
     private var focusGridView: FocusGridView? = null
     private var focusGridDimColor: Int? = null
@@ -300,6 +301,10 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
 //            Utils.dpToPixel(context, 40f).toInt()
 //        )
 
+        videoFrame = typedArray.getInt(
+                R.styleable.CameraView_videoFrame,
+                30
+        )
 
 
         gridModeDimColor = typedArray.getColor(

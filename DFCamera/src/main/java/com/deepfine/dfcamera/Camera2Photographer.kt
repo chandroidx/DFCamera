@@ -224,6 +224,9 @@ class Camera2Photographer : InternalPhotographer {
         updatePreview(null)
     }
 
+
+    override var videoFrame: Int = 30
+
     override var focusGrid: Grid = Grid.OFF
     set(grid)  {
         preview?.focusGrid = grid
@@ -1238,7 +1241,7 @@ class Camera2Photographer : InternalPhotographer {
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
                 setVideoEncodingBitRate(10000000)
-                setVideoFrameRate(30)
+                setVideoFrameRate(videoFrame)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
                 setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             }

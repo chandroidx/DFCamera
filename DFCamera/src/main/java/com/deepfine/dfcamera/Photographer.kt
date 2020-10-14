@@ -11,6 +11,7 @@ interface Photographer {
     val previewSize: Size?
     var imageSize: Size?
     var videoSize: Size?
+    var videoFrame: Int
     val supportedAspectRatios: Set<AspectRatio?>?
     var aspectRatio: AspectRatio?
     var autoFocus: Boolean
