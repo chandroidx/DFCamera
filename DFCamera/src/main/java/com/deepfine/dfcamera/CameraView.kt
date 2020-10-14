@@ -40,7 +40,6 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private val isSmartGlasses: Boolean
     private val exposure: Float
     private var grid: Int
-    private var videoFrame: Int
     private var gridLayout: GridLinesLayout? = null
     private var focusGridView: FocusGridView? = null
     private var focusGridDimColor: Int? = null
@@ -65,6 +64,7 @@ class CameraView @SuppressLint("ClickableViewAccessibility") constructor(
     private var gridModeDimColor: Int? = null
 
     public var enableInterceptTouch: Boolean = true;
+    public var videoFrame: Int
 
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null) : this(

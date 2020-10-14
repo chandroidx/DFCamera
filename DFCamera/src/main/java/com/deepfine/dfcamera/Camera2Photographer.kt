@@ -16,6 +16,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import android.util.Range
 import android.util.SparseIntArray
 import android.view.OrientationEventListener
@@ -223,9 +224,6 @@ class Camera2Photographer : InternalPhotographer {
         updateZoom(newZoom)
         updatePreview(null)
     }
-
-
-    override var videoFrame: Int = 30
 
     override var focusGrid: Grid = Grid.OFF
     set(grid)  {
@@ -1235,13 +1233,14 @@ class Camera2Photographer : InternalPhotographer {
      */
     @Throws(IOException::class)
     private fun setUpMediaRecorder(configurator: MediaRecorderConfigurator?) {
+        Log.d("tag","test video fream : ${preview?.videoFrame}")
         if (configurator == null || configurator.useDefaultConfigs()) {
             mediaRecorder?.apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
                 setVideoEncodingBitRate(10000000)
-                setVideoFrameRate(videoFrame)
+                setVideoFrameRate(preview?.videoFrame ?: 30)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
                 setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             }

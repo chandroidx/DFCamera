@@ -17,6 +17,7 @@
         app:facing="back"
         app:fillSpace="true"
         app:flash="auto"
+        app:videoFrame="1"
         app:pinchToZoom="true"
         app:isSmartGlasses="true"
         app:gridModeLineColor="@color/_979797"
