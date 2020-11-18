@@ -180,7 +180,7 @@ object Utils {
                 )
             }
         }
-        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
+        val sdf = SimpleDateFormat("yyMMdd_HHmmss")
         val currentDate = sdf.format(Date())
 
         return dir.absolutePath + "/" + currentDate + fileSuffix
